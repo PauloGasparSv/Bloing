@@ -2,14 +2,17 @@ import pygame as pg;
 from animation import Animation;
 from player import Player;
 from pygame.locals import *;
+from tools import *;
 
 class Test_State:
-	def __init__(self,display):
+	def __init__(self,display,resolution):
 		
+		offset = (resolution[0]/1366.0,resolution[1]/768.0);
 		# IMAGE LOADING
 
 		frames = [];
-		imagem = pg.image.load("Assets/Bloshi/parado.png").convert_alpha();
+		imagem = load_scaled_image("Assets/Bloshi/parado.png",offset);
+		
 		w = imagem.get_size()[0]/10;
 		h = imagem.get_size()[1]/2;
 		for linha in range(0,2):
@@ -18,7 +21,7 @@ class Test_State:
 		animationIDLE = Animation(frames,200,True);
 
 		frames = [];
-		imagem = pg.image.load("Assets/Bloshi/correndo.png").convert_alpha();
+		imagem = load_scaled_image("Assets/Bloshi/correndo.png",offset);
 		w = imagem.get_size()[0]/10;
 		h = imagem.get_size()[1]/2;
 		for linha in range(0,2):
@@ -30,20 +33,35 @@ class Test_State:
 		self.player = Player(animationIDLE,animationWALK,[0,0]);
 
 		# GAME PLAY STUFF
+		self.camera = [0,0,resolution[0],resolution[1]];
+		self.world_end = 5000*offset[0];	
 
 		self.walking_areas = [];
-		self.walking_areas.append(Rect(100,580,400,200));
+		self.walking_areas.append(Rect(20*offset[0],580*offset[1],800*offset[0],200*offset[1]));
+		self.walking_areas.append(Rect(840*offset[0],580*offset[1],800*offset[0],200*offset[1]));
+		for i in range(0,20):
+			self.walking_areas.append(Rect(1640*offset[0]+10*i*offset[0],580*offset[1]-4*offset[1]*i,10*offset[0],200*offset[1]));
 
-		for i in range(0,10):
-			self.walking_areas.append(Rect(560+i*50,600-i*2,50,200));
-		for i in range(0,10):
-			self.walking_areas.append(Rect(1080+i*50,600-i*10,50,200));
-	
+		self.mouse_position = []
+		self.hit = False;
+
 
 
 
 	def update(self,delta,key):
 		self.player.update(delta);
+
+		self.mouse_position = [pg.mouse.get_pos()[0],pg.mouse.get_pos()[1]];
+		
+		if(self.player.get_rect().colliderect((self.mouse_position[0],self.mouse_position[1],30,30))):
+			self.hit = True;
+		else:
+			self.hit = False;
+
+		if(key[K_d]):
+			self.camera[0] += delta * self.player.speed[0];
+		if(key[K_a]):
+			self.camera[0] -= delta * self.player.speed[0];
 
 		if(key[K_RIGHT]):
 			self.player.position[0] += delta * self.player.speed[0];
@@ -64,22 +82,45 @@ class Test_State:
 
 		self.player.grounded = False;
 		for rect in self.walking_areas:
-			if(rect.colliderect(self.player.get_rect()) and self.player.position[1] + self.player.size[1]-20 < rect[1]):
-				self.player.position[1] = rect[1] - self.player.size[1]+6;
+			if(rect.colliderect(self.player.get_rect()) and self.player.position[1] + self.player.size[1]-(20*self.player.size[1]/84) < rect[1]):
+				self.player.position[1] = rect[1] - self.player.size[1]+(6*self.player.size[1]/84);
 				self.player.grounded = True;
 				self.player.speed[1] = 0;
 				break;
 		
 		if(self.player.grounded == False):
-			self.player.speed[1] += delta * 0.022;
+			self.player.speed[1] += delta * (0.022*self.player.size[1]/84);
 			
 		self.player.position[1] += self.player.speed[1];
+
+
+
+		#CAMERA UPDATE
+		if(self.camera[0] > 10*self.camera[2]/1366 and self.player.get_rect()[0] < self.camera[0]+500*self.camera[2]/1366):
+			self.camera[0] -= delta * self.player.speed[0];
+
+		if(self.camera[0] < self.world_end + 1356*self.camera[2]/1366 and self.player.position[0] + self.player.get_rect()[2] > self.camera[0]+866*self.camera[2]/1366):
+			self.camera[0] += delta * self.player.speed[0];
+
+
 
 	def draw(self,display):
 		display.fill((255,255,255));
 
 		for rect in self.walking_areas:
-			pg.draw.rect(display,(20,20,20),rect);
-			pg.draw.rect(display,(0,255,0),(rect[0],rect[1],rect[2],20));
+			pg.draw.rect(display,(20,20,20),(rect[0]-self.camera[0],rect[1]-self.camera[1],rect[2],rect[3]));
+			pg.draw.rect(display,(0,255,0),(rect[0]-self.camera[0],rect[1]-self.camera[1],rect[2],20));
 
-		self.player.draw(display);
+		
+
+
+		self.player.draw(display,self.camera);
+
+		if(self.hit):
+			pg.draw.rect(display,(255,0,0),(self.mouse_position[0],self.mouse_position[1],30,30));
+		else:
+			pg.draw.rect(display,(0,255,255),(self.mouse_position[0],self.mouse_position[1],30,30));
+
+
+		#pg.draw.rect(display,(0,255,255),(500,0,366,300));
+		#pg.draw.rect(display,(0,255,255),(500,588,366,180));
