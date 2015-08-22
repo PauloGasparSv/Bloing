@@ -40,13 +40,18 @@ class Test_State:
 
 		self.walking_areas = [];
 		self.walking_areas.append(Plain_Ground(20,580,800,200,self.offset));
-		self.walking_areas.append(Plain_Ground(840,580,800,200,self.offset));
+		self.walking_areas.append(Plain_Ground(1040,580,800,200,self.offset));
 		
 		for i in range(0,20):
-			self.walking_areas.append(Plain_Ground(1640+10*i,580-4*i,10,200,self.offset));
+			self.walking_areas.append(Plain_Ground(1840+20*i,580-4*i,20,200,self.offset));
 
 		self.mouse_position = [];
 		self.hit = False;
+
+
+		self.pressing_right = False;
+		self.pressing_left = False;
+		self.pressing_z = False;
 
 
 
@@ -61,27 +66,47 @@ class Test_State:
 		else:
 			self.hit = False;
 
+
 		if(key[K_d]):
 			self.camera[0] += delta * self.player.speed[0];
 		if(key[K_a]):
 			self.camera[0] -= delta * self.player.speed[0];
 
+		#PLAYER CONTROLS
+		if(key[K_RIGHT] == False and self.pressing_right == True):
+			self.pressing_right = False;
+		if(key[K_LEFT] == False and self.pressing_left == True):
+			self.pressing_left = False;
+		if(key[K_z] == False and self.pressing_z == True):
+			self.pressing_z = False;
+
 		if(key[K_RIGHT]):
+			self.pressing_right = True;
 			self.player.position[0] += delta * self.player.speed[0];
 			self.player.facing_right = True;
 			if(self.player.current_action != 1):
 				self.player.change_animation(1);
 
-
 		elif(key[K_LEFT]):
+			self.pressing_left = True;
 			self.player.position[0] -= delta * self.player.speed[0];
 			self.player.facing_right = False;
 			if(self.player.current_action != 1):
 				self.player.change_animation(1);
-
+		
 		else:
 			if(self.player.current_action!=0):
 				self.player.change_animation(0);
+
+	
+		if(self.player.grounded and key[K_z] and self.pressing_z == False):
+			self.pressing_z = True;
+			self.player.position[1] -= 20;
+			self.player.speed[1] -= 10;
+
+
+
+		#PLAYER COLLISIONS
 
 		self.player.grounded = False;
 		for rect in self.walking_areas:
@@ -95,6 +120,7 @@ class Test_State:
 			self.player.speed[1] += delta * 0.022*self.offset[1];
 			
 		self.player.position[1] += self.player.speed[1];
+
 
 
 

@@ -14,7 +14,6 @@ class Player:
 		self.animations.append(walking_animation);
 		
 		self.size = [self.animations[0].get_frame(False).get_size()[0],self.animations[0].get_frame(False).get_size()[1]];
-		print(self.animations[0].get_frame(False).get_size()[1])
 		self.grounded = False;
 
 		self.speed = [0.25*self.size[0]/100.0,0];
