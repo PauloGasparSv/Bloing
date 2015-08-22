@@ -44,6 +44,9 @@ class Test_State:
 
 
 		self.walking_areas.append(Plain_Ground(1000,450,200,50,self.offset));
+		self.walking_areas.append(Plain_Ground(1300,380,200,50,self.offset));
+		self.walking_areas.append(Plain_Ground(1600,310,200,50,self.offset));
+		self.walking_areas.append(Plain_Ground(1900,240,200,50,self.offset));
 
 		self.mouse_position = [];
 		self.hit = False;
@@ -111,7 +114,7 @@ class Test_State:
 
 		self.player.grounded = False;
 		for rect in self.walking_areas:
-			if(rect.hit_test(self.player.get_rect()) and self.player.position[1] + self.player.size[1]-20*self.offset[1] < rect.get_rect()[1]):
+			if(rect.hit_test(self.player.get_rect()) and self.player.position[1] + self.player.size[1]-20*self.offset[1] < rect.get_rect()[1] and self.player.speed[1]>=0):
 				self.player.position[1] = rect.get_rect()[1] - self.player.size[1]+6*self.offset[1];
 				self.player.grounded = True;
 				self.player.speed[1] = 0;
