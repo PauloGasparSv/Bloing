@@ -29,10 +29,10 @@ class Test_State:
 		animationJUMP.set_once(True);
 
 
-		self.player = Player(animationIDLE,animationWALK,animationJUMP,[0,0]);
+		self.player = Player(animationIDLE,animationWALK,animationJUMP,[0,200]);
 
 		#GAME PLAY STUFF
-		self.camera = [0,0,resolution[0],resolution[1]];
+		self.camera = [0,-100,resolution[0],resolution[1]];
 		self.world_end = 5000*self.offset[0];	
 
 		self.walking_areas = [];
@@ -41,6 +41,9 @@ class Test_State:
 		
 		for i in range(0,20):
 			self.walking_areas.append(Plain_Ground(1840+20*i,580-4*i,20,200,self.offset));
+
+
+		self.walking_areas.append(Plain_Ground(1000,450,200,50,self.offset));
 
 		self.mouse_position = [];
 		self.hit = False;
@@ -122,7 +125,8 @@ class Test_State:
 		self.player.position[1] += self.player.speed[1];
 
 
-
+		#pg.draw.rect(display,(0,255,255),(500,0,366,300));
+		#pg.draw.rect(display,(0,255,255),(500,588,366,180));
 
 		#CAMERA UPDATE
 		if(self.camera[0] > 10*self.offset[0] and self.player.get_rect()[0] < self.camera[0]+500*self.offset[0]):
@@ -131,7 +135,17 @@ class Test_State:
 		if(self.camera[0] < self.world_end + 1356*self.offset[0] and self.player.position[0] + self.player.get_rect()[2] > self.camera[0]+866*self.offset[0]):
 			self.camera[0] += delta * self.player.speed[0];
 
+		if(self.camera[1] < 0 and self.player.get_rect()[1]+self.player.get_rect()[3] > self.camera[1]+588*self.offset[1]):
+			self.camera[1] += delta *(self.player.get_rect()[1] - self.camera[1])*0.001;
 
+		if(self.player.get_rect()[1] < self.camera[1]+320*self.offset[1]):
+			self.camera[1] -= delta * (self.player.get_rect()[1]-self.camera[1])*0.001;
+
+
+	def mod(self,num):
+		if(num < 0):
+			num = -num
+		return num;
 
 	def draw(self,display):
 		display.fill((255,255,255));
@@ -151,5 +165,4 @@ class Test_State:
 			pg.draw.rect(display,(0,255,255),(self.mouse_position[0],self.mouse_position[1],30*self.offset[0],30*self.offset[1]));
 
 
-		#pg.draw.rect(display,(0,255,255),(500,0,366,300));
-		#pg.draw.rect(display,(0,255,255),(500,588,366,180));
+		
