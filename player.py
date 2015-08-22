@@ -2,16 +2,14 @@ import pygame as pg;
 from pygame.locals import *;
 
 class Player:
-	def __init__(self,idle_animation,walking_animation,pos):
+	def __init__(self,idle_animation,walking_animation,jumping_animation,pos):
 		self.current_action = 0;
 
 		self.position = pos;
 
 		self.facing_right = True;
 
-		self.animations = [];
-		self.animations.append(idle_animation);
-		self.animations.append(walking_animation);
+		self.animations = [idle_animation,walking_animation,jumping_animation];
 		
 		self.size = [self.animations[0].get_frame(False).get_size()[0],self.animations[0].get_frame(False).get_size()[1]];
 		self.grounded = False;

@@ -9,20 +9,26 @@ class Animation:
 		self.playing = playing;
 		self.timer = 0;
 		self.length = len(images);
+		self.play_once = False;
+		self.has_played = False;
 	
 	def update(self,delta):
-		if(self.playing):
+		if(self.playing and (self.play_once == True and self.has_played == False or self.play_once == False)):
 			self.timer += self.speed * delta;
 			if(self.timer > 5000):
 				self.timer = 0;
 				if (self.curr_frame == self.length -1):
-					self.curr_frame = 0; 
+					if(self.play_once == False):
+						self.curr_frame = 0; 
+					self.has_played = True;
 				else:
 					self.curr_frame += 1;
 
 	def get_frame(self,inverted):
 		return self.frame[self.curr_frame] if inverted == False else pg.transform.flip(self.frame[self.curr_frame],True,False);
 
+	def set_once(self,play_once):
+		self.play_once = play_once;
 
 	def play(self):
 		self.curr_frame = 0;
@@ -32,6 +38,7 @@ class Animation:
 	def stop(self):
 		self.curr_frame = 0;
 		self.timer = 0;
+		self.has_played = False;
 		self.playing = False;
 
 	def pause(self):

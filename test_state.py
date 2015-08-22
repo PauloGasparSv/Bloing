@@ -22,8 +22,14 @@ class Test_State:
 			frames.append(load_scaled_image("Assets/Bloshi/Correndo/"+str(current)+".png",self.offset));
 		animationWALK = Animation(frames,240,True);
 
+		frames = [];
+		for current in range(0,20):
+			frames.append(load_scaled_image("Assets/Bloshi/Pulando/"+str(current)+".png",self.offset));
+		animationJUMP = Animation(frames,350,True);
+		animationJUMP.set_once(True);
 
-		self.player = Player(animationIDLE,animationWALK,[0,0]);
+
+		self.player = Player(animationIDLE,animationWALK,animationJUMP,[0,0]);
 
 		#GAME PLAY STUFF
 		self.camera = [0,0,resolution[0],resolution[1]];
@@ -75,18 +81,18 @@ class Test_State:
 			self.pressing_right = True;
 			self.player.position[0] += delta * self.player.speed[0];
 			self.player.facing_right = True;
-			if(self.player.current_action != 1):
+			if(self.player.current_action != 1 and self.player.grounded == True):
 				self.player.change_animation(1);
 
 		elif(key[K_LEFT]):
 			self.pressing_left = True;
 			self.player.position[0] -= delta * self.player.speed[0];
 			self.player.facing_right = False;
-			if(self.player.current_action != 1):
+			if(self.player.current_action != 1 and self.player.grounded == True):
 				self.player.change_animation(1);
 		
 		else:
-			if(self.player.current_action!=0):
+			if(self.player.current_action!=0 and self.player.grounded == True):
 				self.player.change_animation(0);
 
 	
@@ -94,6 +100,7 @@ class Test_State:
 			self.pressing_z = True;
 			self.player.position[1] -= 20;
 			self.player.speed[1] -= 10;
+			self.player.change_animation(2);
 
 
 
@@ -109,6 +116,8 @@ class Test_State:
 		
 		if(self.player.grounded == False):
 			self.player.speed[1] += delta * 0.022*self.offset[1];
+			if(self.player.current_action != 2):
+				self.player.change_animation(2);
 			
 		self.player.position[1] += self.player.speed[1];
 
