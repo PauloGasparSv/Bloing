@@ -13,22 +13,13 @@ class Test_State:
 		# IMAGE LOADING
 
 		frames = [];
-		imagem = load_scaled_image("Assets/Bloshi/parado.png",self.offset);
-		
-		w = imagem.get_size()[0]/10;
-		h = imagem.get_size()[1]/2;
-		for linha in range(0,2):
-			for coluna in range(0,10):
-				frames.append(imagem.subsurface(coluna*w,linha*h,w,h));
+		for current in range(0,20):
+			frames.append(load_scaled_image("Assets/Bloshi/Parado/"+str(current)+".png",self.offset));
 		animationIDLE = Animation(frames,200,True);
 
 		frames = [];
-		imagem = load_scaled_image("Assets/Bloshi/correndo.png",self.offset);
-		w = imagem.get_size()[0]/10;
-		h = imagem.get_size()[1]/2;
-		for linha in range(0,2):
-			for coluna in range(0,10):
-				frames.append(imagem.subsurface(coluna*w,linha*h,w,h));
+		for current in range(0,20):
+			frames.append(load_scaled_image("Assets/Bloshi/Correndo/"+str(current)+".png",self.offset));
 		animationWALK = Animation(frames,240,True);
 
 
