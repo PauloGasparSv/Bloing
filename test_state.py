@@ -7,11 +7,12 @@ from tools import *;
 class Test_State:
 	def __init__(self,display,resolution):
 		
-		offset = (resolution[0]/1366.0,resolution[1]/768.0);
+		self.offset = (resolution[0]/1366.0,resolution[1]/768.0);
+		
 		# IMAGE LOADING
 
 		frames = [];
-		imagem = load_scaled_image("Assets/Bloshi/parado.png",offset);
+		imagem = load_scaled_image("Assets/Bloshi/parado.png",self.offset);
 		
 		w = imagem.get_size()[0]/10;
 		h = imagem.get_size()[1]/2;
@@ -21,7 +22,7 @@ class Test_State:
 		animationIDLE = Animation(frames,200,True);
 
 		frames = [];
-		imagem = load_scaled_image("Assets/Bloshi/correndo.png",offset);
+		imagem = load_scaled_image("Assets/Bloshi/correndo.png",self.offset);
 		w = imagem.get_size()[0]/10;
 		h = imagem.get_size()[1]/2;
 		for linha in range(0,2):
@@ -32,17 +33,17 @@ class Test_State:
 
 		self.player = Player(animationIDLE,animationWALK,[0,0]);
 
-		# GAME PLAY STUFF
+		#GAME PLAY STUFF
 		self.camera = [0,0,resolution[0],resolution[1]];
-		self.world_end = 5000*offset[0];	
+		self.world_end = 5000*self.offset[0];	
 
 		self.walking_areas = [];
-		self.walking_areas.append(Rect(20*offset[0],580*offset[1],800*offset[0],200*offset[1]));
-		self.walking_areas.append(Rect(840*offset[0],580*offset[1],800*offset[0],200*offset[1]));
+		self.walking_areas.append(Rect(20*self.offset[0],580*self.offset[1],800*self.offset[0],200*self.offset[1]));
+		self.walking_areas.append(Rect(840*self.offset[0],580*self.offset[1],800*self.offset[0],200*self.offset[1]));
 		for i in range(0,20):
-			self.walking_areas.append(Rect(1640*offset[0]+10*i*offset[0],580*offset[1]-4*offset[1]*i,10*offset[0],200*offset[1]));
+			self.walking_areas.append(Rect(1640*self.offset[0]+10*i*self.offset[0],580*self.offset[1]-4*self.offset[1]*i,10*self.offset[0],200*self.offset[1]));
 
-		self.mouse_position = []
+		self.mouse_position = [];
 		self.hit = False;
 
 
@@ -53,7 +54,7 @@ class Test_State:
 
 		self.mouse_position = [pg.mouse.get_pos()[0],pg.mouse.get_pos()[1]];
 		
-		if(self.player.get_rect().colliderect((self.mouse_position[0],self.mouse_position[1],30,30))):
+		if(self.player.get_rect().colliderect((self.mouse_position[0],self.mouse_position[1],30*self.offset[0],30*self.offset[1]))):
 			self.hit = True;
 		else:
 			self.hit = False;
@@ -82,24 +83,24 @@ class Test_State:
 
 		self.player.grounded = False;
 		for rect in self.walking_areas:
-			if(rect.colliderect(self.player.get_rect()) and self.player.position[1] + self.player.size[1]-(20*self.player.size[1]/84) < rect[1]):
-				self.player.position[1] = rect[1] - self.player.size[1]+(6*self.player.size[1]/84);
+			if(rect.colliderect(self.player.get_rect()) and self.player.position[1] + self.player.size[1]-20*self.offset[1] < rect[1]):
+				self.player.position[1] = rect[1] - self.player.size[1]+6*self.offset[1];
 				self.player.grounded = True;
 				self.player.speed[1] = 0;
 				break;
 		
 		if(self.player.grounded == False):
-			self.player.speed[1] += delta * (0.022*self.player.size[1]/84);
+			self.player.speed[1] += delta * 0.022*self.offset[1];
 			
 		self.player.position[1] += self.player.speed[1];
 
 
 
 		#CAMERA UPDATE
-		if(self.camera[0] > 10*self.camera[2]/1366 and self.player.get_rect()[0] < self.camera[0]+500*self.camera[2]/1366):
+		if(self.camera[0] > 10*self.offset[0] and self.player.get_rect()[0] < self.camera[0]+500*self.offset[0]):
 			self.camera[0] -= delta * self.player.speed[0];
 
-		if(self.camera[0] < self.world_end + 1356*self.camera[2]/1366 and self.player.position[0] + self.player.get_rect()[2] > self.camera[0]+866*self.camera[2]/1366):
+		if(self.camera[0] < self.world_end + 1356*self.offset[0] and self.player.position[0] + self.player.get_rect()[2] > self.camera[0]+866*self.offset[0]):
 			self.camera[0] += delta * self.player.speed[0];
 
 
@@ -117,9 +118,9 @@ class Test_State:
 		self.player.draw(display,self.camera);
 
 		if(self.hit):
-			pg.draw.rect(display,(255,0,0),(self.mouse_position[0],self.mouse_position[1],30,30));
+			pg.draw.rect(display,(255,0,0),(self.mouse_position[0],self.mouse_position[1],30*self.offset[0],30*self.offset[1]));
 		else:
-			pg.draw.rect(display,(0,255,255),(self.mouse_position[0],self.mouse_position[1],30,30));
+			pg.draw.rect(display,(0,255,255),(self.mouse_position[0],self.mouse_position[1],30*self.offset[0],30*self.offset[1]));
 
 
 		#pg.draw.rect(display,(0,255,255),(500,0,366,300));
