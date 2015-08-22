@@ -36,6 +36,7 @@ class Test_State:
 		self.world_end = 5000*self.offset[0];	
 
 		self.walking_areas = [];
+		self.walking_areas.append(Plain_Ground(-1640,580,1600,200,self.offset));
 		self.walking_areas.append(Plain_Ground(20,580,800,200,self.offset));
 		self.walking_areas.append(Plain_Ground(1040,580,800,200,self.offset));
 		
@@ -132,6 +133,9 @@ class Test_State:
 		#pg.draw.rect(display,(0,255,255),(500,588,366,180));
 
 		#CAMERA UPDATE
+		if(self.player.get_rect()[0] < -500*self.offset[0] and self.player.get_rect()[0] < self.camera[0]+500*self.offset[0]):
+			self.camera[0] -= delta * self.player.speed[0];
+
 		if(self.camera[0] > 10*self.offset[0] and self.player.get_rect()[0] < self.camera[0]+500*self.offset[0]):
 			self.camera[0] -= delta * self.player.speed[0];
 
