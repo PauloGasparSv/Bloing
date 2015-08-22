@@ -3,6 +3,7 @@ from animation import Animation;
 from player import Player;
 from pygame.locals import *;
 from tools import *;
+from ground import *;
 
 class Test_State:
 	def __init__(self,display,resolution):
@@ -38,10 +39,11 @@ class Test_State:
 		self.world_end = 5000*self.offset[0];	
 
 		self.walking_areas = [];
-		self.walking_areas.append(Rect(20*self.offset[0],580*self.offset[1],800*self.offset[0],200*self.offset[1]));
-		self.walking_areas.append(Rect(840*self.offset[0],580*self.offset[1],800*self.offset[0],200*self.offset[1]));
+		self.walking_areas.append(Plain_Ground(20,580,800,200,self.offset));
+		self.walking_areas.append(Plain_Ground(840,580,800,200,self.offset));
+		
 		for i in range(0,20):
-			self.walking_areas.append(Rect(1640*self.offset[0]+10*i*self.offset[0],580*self.offset[1]-4*self.offset[1]*i,10*self.offset[0],200*self.offset[1]));
+			self.walking_areas.append(Plain_Ground(1640+10*i,580-4*i,10,200,self.offset));
 
 		self.mouse_position = [];
 		self.hit = False;
@@ -83,8 +85,8 @@ class Test_State:
 
 		self.player.grounded = False;
 		for rect in self.walking_areas:
-			if(rect.colliderect(self.player.get_rect()) and self.player.position[1] + self.player.size[1]-20*self.offset[1] < rect[1]):
-				self.player.position[1] = rect[1] - self.player.size[1]+6*self.offset[1];
+			if(rect.hit_test(self.player.get_rect()) and self.player.position[1] + self.player.size[1]-20*self.offset[1] < rect.get_rect()[1]):
+				self.player.position[1] = rect.get_rect()[1] - self.player.size[1]+6*self.offset[1];
 				self.player.grounded = True;
 				self.player.speed[1] = 0;
 				break;
@@ -109,8 +111,8 @@ class Test_State:
 		display.fill((255,255,255));
 
 		for rect in self.walking_areas:
-			pg.draw.rect(display,(20,20,20),(rect[0]-self.camera[0],rect[1]-self.camera[1],rect[2],rect[3]));
-			pg.draw.rect(display,(0,255,0),(rect[0]-self.camera[0],rect[1]-self.camera[1],rect[2],20));
+			pg.draw.rect(display,(20,20,20),(rect.get_rect()[0]-self.camera[0],rect.get_rect()[1]-self.camera[1],rect.get_rect()[2],rect.get_rect()[3]));
+			pg.draw.rect(display,(0,255,0),(rect.get_rect()[0]-self.camera[0],rect.get_rect()[1]-self.camera[1],rect.get_rect()[2],20));
 
 		
 
