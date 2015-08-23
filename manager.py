@@ -25,12 +25,12 @@ class Manager:
 
 
 		#TAKE OFF IF RELEASE
-		self.change_resolution(1);
+		self.change_resolution(0);
 
 		#GAME STATES
 		self.current_state_index = -1;
 		self.current_state = Test_State(self.display,self.RESOLUTIONS[self.resolution]);
-			
+		
 
 	def update(self,delta):
 		key = pg.key.get_pressed();

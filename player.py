@@ -18,7 +18,7 @@ class Player:
 
 		self.double_jumps_counter = 0;
 
-	
+
 	def update(self,delta,offset):
 		self.animations[self.current_action].update(delta);
 		if(self.speed[1] > offset[1]*10):
@@ -35,7 +35,7 @@ class Player:
 		self.current_action = action;
 		self.animations[self.current_action].play();
 
-	def get_rect(self):
+	def get_rect(self,offset):
 		if(self.facing_right):
-			return Rect(self.position[0]+(0.3*self.size[0]),self.position[1]+(10*self.size[1]/84),self.size[0]-(0.6*self.size[0]),self.size[1]-(10*self.size[1]/84));
-		return Rect(self.position[0]+(0.3*self.size[0]),self.position[1]+(10*self.size[1]/84),self.size[0]-(0.6*self.size[0]),self.size[1]-(10*self.size[1]/84));
+			return Rect(self.position[0]+(0.3*self.size[0]),self.position[1]+(10*offset[1]),self.size[0]-(0.6*self.size[0]),self.size[1]-(10*offset[1]));
+		return Rect(self.position[0]+(0.3*self.size[0]),self.position[1]+(10*offset[1]),self.size[0]-(0.6*self.size[0]),self.size[1]-(10*offset[1]));
