@@ -16,14 +16,15 @@ class Player:
 
 		self.speed = [0.25*self.size[0]/100.0,0];
 
+		self.double_jumps_counter = 0;
 
-	def update(self,delta):
+	
+	def update(self,delta,offset):
 		self.animations[self.current_action].update(delta);
-		off = self.size[1]*10/84;
-		if(self.speed[1] > off):
-			self.speed[1] = off;
-		if(self.speed[1] < -off):
-			self.speed[1] = -off;
+		if(self.speed[1] > offset[1]*10):
+			self.speed[1] = offset[1]*10;
+		if(self.speed[1] < -offset[1]*10):
+			self.speed[1] = -offset[1]*10;
 
 	def draw(self,display,camera):
 		display.blit(self.animations[self.current_action].get_frame(not self.facing_right),(self.position[0]-camera[0],self.position[1]-camera[1]));
