@@ -10,6 +10,9 @@ class Test_State:
 		
 		self.offset = (resolution[0]/1366.0,resolution[1]/768.0);
 		
+		#FONTE
+		self.fonte = pg.font.SysFont("Courier",72);
+
 		# IMAGE LOADING
 
 		self.secret_image = load_scaled_image("Assets/Outros/zika.png",self.offset);
@@ -33,7 +36,7 @@ class Test_State:
 
 
 		#self.player = Player(animationIDLE,animationWALK,animationJUMP,[0,200]);
-		self.player = Player(animationIDLE,animationWALK,animationJUMP,[-2000,0]);
+		self.player = Player(animationIDLE,animationWALK,animationJUMP,[10,200]);
 		#GAME PLAY STUFF
 		self.camera = [0,-100,resolution[0],resolution[1]];
 		self.world_end = [-4900*self.offset[0],5000*self.offset[0]];	
@@ -80,10 +83,10 @@ class Test_State:
 
 		#CAMERA CONTROLS
 
-		if(key[K_d]):
-			self.camera[0] += delta * self.player.speed[0];
-		if(key[K_a]):
-			self.camera[0] -= delta * self.player.speed[0];
+		#if(key[K_d]):
+		#	self.camera[0] += delta * self.player.speed[0];
+		#if(key[K_a]):
+		#	self.camera[0] -= delta * self.player.speed[0];
 
 		#PLAYER CONTROLS
 
@@ -195,7 +198,7 @@ class Test_State:
 
 		if(self.show_secret_image):
 			display.blit(pg.transform.scale(self.secret_image,(300,300)),(-4890-self.camera[0],200-self.camera[1]));
-
+			display.blit(self.fonte.render("Emma Watson > Emma Stone",False,(0,0,0)),(-4890-self.camera[0],120-self.camera[1]))
 		self.player.draw(display,self.camera);
 
 		if(self.hit):
