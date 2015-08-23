@@ -137,19 +137,20 @@ class Test_State:
 		self.player.grounded = False;
 		for rect in self.walking_areas:
 			rect.update(delta,self.camera,self.offset);
-			if(self.player.grounded == False and rect.active and rect.hit_test(self.player.get_rect()) and self.player.position[1] + self.player.size[1]-20*self.offset[1] < rect.get_rect()[1] and self.player.speed[1]>=0):
+			if(self.player.grounded == False and rect.active and rect.hit_test(self.player.get_rect()) and self.player.position[1] + self.player.size[1]-40*self.offset[1] < rect.get_rect()[1] and self.player.speed[1]>=0):
 				self.player.position[1] = rect.get_rect()[1] - self.player.size[1]+6*self.offset[1];
 				self.player.grounded = True;
 				self.player.double_jumps_counter = 0;
-				self.player.speed[1] = 0;				
+				self.player.speed[1] = 0;			
 				
 		
 		if(self.player.grounded == False):
 			self.player.speed[1] += delta * 0.022*self.offset[1];
 			if(self.player.current_action != 2):
 				self.player.change_animation(2);
-			
-		self.player.position[1] += self.player.speed[1];
+		
+
+		self.player.position[1] += self.player.speed[1]*delta/16;
 
 
 		
@@ -193,7 +194,7 @@ class Test_State:
 		display.fill((255,255,255));
 
 		for rect in self.walking_areas:
-			rect.draw(display,self.camera);
+			rect.draw(display,self.camera,self.offset);
 
 
 		if(self.show_secret_image):

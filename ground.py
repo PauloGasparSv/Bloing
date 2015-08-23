@@ -13,11 +13,11 @@ class Plain_Ground:
 
 
 
-	def draw(self,display,camera):
+	def draw(self,display,camera,offset):
 		pg.draw.rect(display,(50,20,20),(self.get_rect()[0]-camera[0],
 			self.get_rect()[1]-camera[1],self.get_rect()[2],self.get_rect()[3]));
 		pg.draw.rect(display,(0,255,0),(self.get_rect()[0]-camera[0],
-			self.get_rect()[1]-camera[1],self.get_rect()[2],20));
+			self.get_rect()[1]-camera[1],self.get_rect()[2],20*offset[1]));
 
 	def hit_test(self,rect):
 		return rect.colliderect(self.rect);

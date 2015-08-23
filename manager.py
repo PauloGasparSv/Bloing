@@ -25,10 +25,9 @@ class Manager:
 
 
 		#TAKE OFF IF RELEASE
-		self.change_resolution(0);
+		self.change_resolution(1);
 
 		#GAME STATES
-
 		self.current_state_index = -1;
 		self.current_state = Test_State(self.display,self.RESOLUTIONS[self.resolution]);
 			
