@@ -56,6 +56,7 @@ class Test_State:
 		self.pressing_right = False;
 		self.pressing_left = False;
 		self.pressing_z = False;
+		self.num_double_jumps = 0;
 
 
 
@@ -106,8 +107,16 @@ class Test_State:
 		if(self.player.grounded and key[K_z] and self.pressing_z == False):
 			self.pressing_z = True;
 			self.player.position[1] -= 20;
-			self.player.speed[1] -= 10;
+			self.player.speed[1] = -10;
 			self.player.change_animation(2);
+
+		if(self.player.grounded == False and key[K_z] and self.pressing_z == False and self.num_double_jumps < 1):
+			self.pressing_z = True;
+			self.num_double_jumps += 1;
+			self.player.position[1] -= 15;
+			self.player.speed[1] = -6.5;
+			self.player.change_animation(2);
+
 
 
 
@@ -118,6 +127,7 @@ class Test_State:
 			if(rect.hit_test(self.player.get_rect()) and self.player.position[1] + self.player.size[1]-20*self.offset[1] < rect.get_rect()[1] and self.player.speed[1]>=0):
 				self.player.position[1] = rect.get_rect()[1] - self.player.size[1]+6*self.offset[1];
 				self.player.grounded = True;
+				self.num_double_jumps = 0;
 				self.player.speed[1] = 0;
 				break;
 		
