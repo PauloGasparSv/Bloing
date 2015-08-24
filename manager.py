@@ -7,7 +7,7 @@ from test_state import Test_State;
 class Manager:
 	def __init__(self):
 		#RESOLTUIONS ISSUES
-		self.RESOLUTIONS = [(1366,768),(683,384),(1024,768),(800,600)];
+		self.RESOLUTIONS = [(1366,768),(683,768/2),(1024,768),(800,600)];
 		self.FULL_SCREEN = False;
 
 		self.WIDTH = pg.display.Info().current_w;
@@ -25,7 +25,7 @@ class Manager:
 
 
 		#TAKE OFF IF RELEASE
-		self.change_resolution(0);
+		self.change_resolution(1);
 
 		#GAME STATES
 		self.current_state_index = -1;
