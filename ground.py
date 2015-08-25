@@ -10,6 +10,8 @@ class Plain_Ground:
 		if(self.rect[0]+self.rect[2] > camera[0]-50 and self.rect[0] < camera[0]+camera[2]+50 and
 			self.rect[1]+self.rect[3] > camera[1]-50 and self.rect[1] < camera[1]+camera[3]+50):
 			self.active = True;
+		else:
+			self.active = False;
 
 
 

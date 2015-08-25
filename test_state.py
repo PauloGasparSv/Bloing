@@ -31,7 +31,7 @@ class Test_State:
 		frames = [];
 		for current in range(0,20):
 			frames.append(load_scaled_image("Assets/Bloshi/Pulando/"+str(current)+".png",self.offset));
-		animationJUMP = Animation(frames,350,True);
+		animationJUMP = Animation(frames,320,True);
 		animationJUMP.set_once(True);
 
 		self.player = Player(animationIDLE,animationWALK,animationJUMP,[10,200]);
@@ -40,16 +40,18 @@ class Test_State:
 		frames = [];
 		for current in range(0,20):
 			frames.append(load_scaled_image("Assets/Goodog/Andando/"+str(current)+".png",self.offset));
-		animationWALK = Animation(frames,140,True);
+		animationWALK = Animation(frames,100,True);
 		frames = [];
 		for current in range(0,14):
 			frames.append(load_scaled_image("Assets/Goodog/Hit/"+str(current)+".png",self.offset));
-		animationDEATH = Animation(frames,100,True);
+		animationDEATH = Animation(frames,120,True);
 		animationDEATH.set_once(True);
 		
 		self.inimigos = [];
 		self.inimigos.append(Goodog(animationWALK,animationDEATH,True,[1000,470],(1800,1100)));
 		
+		self.pit_image = load_scaled_image("Assets/Outros/alpha_black.png",(self.offset[0]*0.43,self.offset[1]*0.34));
+
 
 		#GAME PLAY STUFF
 		self.camera = [0,-200,1366,768];
@@ -108,7 +110,7 @@ class Test_State:
 
 		#INIMIGOS
 		for inimigo in self.inimigos:
-			inimigo.update(delta,self.player);
+			inimigo.update(delta,self.camera,self.player);
 
 
 		#CAMERA UPDATE
@@ -135,7 +137,7 @@ class Test_State:
 			self.camera[1] += delta *(self.player.get_rect()[1] - self.camera[1])*0.001;
 
 
-		if(self.player.get_rect()[1] < self.camera[1]+275):
+		elif(self.player.get_rect()[1] < self.camera[1]+275):
 			self.camera[1] -= delta * (self.player.get_rect()[1]-self.camera[1])*0.001;
 
 
@@ -172,4 +174,4 @@ class Test_State:
 			pg.draw.rect(display,(0,255,255),(self.mouse_position[0],self.mouse_position[1],30*self.offset[0],30*self.offset[1]));
 
 		
-		
+		display.blit(self.pit_image,(820-self.camera[0],560-self.camera[1]));

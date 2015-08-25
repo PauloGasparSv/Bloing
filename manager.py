@@ -25,7 +25,7 @@ class Manager:
 
 
 		#TAKE OFF IF RELEASE
-		self.change_resolution(1);
+		self.change_resolution(0);
 
 		#GAME STATES
 		self.current_state_index = -1;

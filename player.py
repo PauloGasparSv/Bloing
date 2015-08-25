@@ -73,8 +73,7 @@ class Player:
 			self.speed[1] = -10;
 
 	def draw(self,display,camera,offset):
-		for i in range(-20,20):
-			display.blit(self.animations[self.current_action].get_frame(not self.facing_right),((self.position[0]-camera[0])*offset[0],(self.position[1]-camera[1]+84*i)*offset[1]));
+		display.blit(self.animations[self.current_action].get_frame(not self.facing_right),((self.position[0]-camera[0])*offset[0],(self.position[1]-camera[1])*offset[1]));
 
 	def change_animation(self,action):
 		self.animations[self.current_action].stop();
