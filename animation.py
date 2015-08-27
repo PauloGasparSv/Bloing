@@ -15,7 +15,7 @@ class Animation:
 	def update(self,delta):
 		if(self.playing and (self.play_once == True and self.has_played == False or self.play_once == False)):
 			self.timer += self.speed * delta;
-			if(self.timer > 5000):
+			if(self.timer > 20000):
 				self.timer = 0;
 				if (self.curr_frame == self.length -1):
 					if(self.play_once == False):
@@ -29,6 +29,11 @@ class Animation:
 
 	def set_once(self,play_once):
 		self.play_once = play_once;
+
+	def get_speed(self):
+		return self.speed;
+	def set_speed(self,speed):
+		self.speed = speed;
 
 	def play(self):
 		self.curr_frame = 0;

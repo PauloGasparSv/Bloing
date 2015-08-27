@@ -12,7 +12,7 @@ class Goodog:
 		self.size = [80,115];
 		self.grounded = False;
 
-		self.speed = [0.15,0];
+		self.speed = [0.12,0];
 
 		self.destination = destination;
 		self.active = False;
@@ -44,13 +44,15 @@ class Goodog:
 					if(self.position[0] + self.speed[0]*delta < self.destination[1]):
 						self.facing_right = True;
 
-				if(player.get_rect().colliderect(self.get_rect()) and player.get_rect()[1]+player.get_rect()[3] > self.get_rect()[1]+25 and player.speed[1] > 0):
-					self.change_animation(1);
-					player.change_animation(2);
-					player.position[1] -= 21;
-					player.speed[1] = -12;
-					player.double_jumps_counter = 0;
-
+				if(player.get_rect().colliderect(self.get_rect())):
+					if(player.get_rect()[1]+player.get_rect()[3] > self.get_rect()[1]+25 and player.speed[1] > 0):
+						self.change_animation(1);
+						player.change_animation(2);
+						player.position[1] -= 21;
+						player.speed[1] = -12;
+						player.double_jumps_counter = 0;
+					elif(player.current_action != 3):
+						player.change_animation(3);
 
 	def draw(self,display,camera,offset):
 		if(self.active):

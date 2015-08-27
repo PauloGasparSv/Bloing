@@ -40,6 +40,9 @@ class Plain_Ground:
 					else:
 						self.texture.blit(tiles[23],(c*150*offset[0],150*l*offset[1]));
 
+
+			
+
 	def update(self,delta,player_pos,camera):
 		if(self.rect[0]+self.rect[2] > player_pos[0]-1366 and self.rect[0] < player_pos[0]+1366 and
 			self.rect[1]+self.rect[3] > player_pos[1]-768 and self.rect[1] < player_pos[1]+768):

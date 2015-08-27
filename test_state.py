@@ -21,34 +21,40 @@ class Test_State:
 		frames = [];
 		for current in range(0,20):
 			frames.append(load_scaled_image("Assets/Bloshi/Parado/"+str(current)+".png",self.offset));
-		animationIDLE = Animation(frames,200,True);
+		animationIDLE = Animation(frames,800,True);
 
 		frames = [];
 		for current in range(0,20):
 			frames.append(load_scaled_image("Assets/Bloshi/Correndo/"+str(current)+".png",self.offset));
-		animationWALK = Animation(frames,240,True);
+		animationWALK = Animation(frames,960,True);
 
 		frames = [];
 		for current in range(0,20):  
 			frames.append(load_scaled_image("Assets/Bloshi/Pulando/"+str(current)+".png",self.offset));
-		animationJUMP = Animation(frames,320,True);
+		animationJUMP = Animation(frames,1280,True);
 		animationJUMP.set_once(True);
 
-		self.player = Player(animationIDLE,animationWALK,animationJUMP,[10,200]);
+		frames = [];
+		for current in range(0,20):  
+			frames.append(load_scaled_image("Assets/Bloshi/Morrendo/"+str(current)+".png",self.offset));
+		animationDEATH = Animation(frames,900,True);
+		animationDEATH.set_once(True);
+
+		self.player = Player(animationIDLE,animationWALK,animationJUMP,animationDEATH,[10,200]);
 
 
 		frames = [];
 		for current in range(0,20):
 			frames.append(load_scaled_image("Assets/Goodog/Andando/"+str(current)+".png",self.offset));
-		animationWALK = Animation(frames,150,True);
+		animationWALK = Animation(frames,600,True);
 		frames = [];
 		for current in range(0,14):
 			frames.append(load_scaled_image("Assets/Goodog/Hit/"+str(current)+".png",self.offset));
-		animationDEATH = Animation(frames,120,True);
+		animationDEATH = Animation(frames,480,True);
 		animationDEATH.set_once(True);
 		
 		self.inimigos = []; 
-		self.inimigos.append(Goodog(animationWALK,animationDEATH,True,[1000,470],(1800,1100)));
+		self.inimigos.append(Goodog(animationWALK,animationDEATH,True,[1000,370],(1800,1100)));
 		
 		self.pit_image = load_scaled_image("Assets/Outros/alpha_black.png",(self.offset[0]*0.43,self.offset[1]*0.34));
 
@@ -62,10 +68,10 @@ class Test_State:
 		self.camera = [0,-200,1366,768];
 		self.world_end = [-4900,5000];
 
-		self.walking_areas = [];
-		self.walking_areas.append(Plain_Ground(20,580,900,600,tiles,self.offset));
-		self.walking_areas.append(Plain_Ground(1040,580,900,600,tiles,self.offset));
-		self.walking_areas.append(Plain_Ground(1520,280,300,160,tiles,self.offset));
+		self.walking_areas = []; 
+		self.walking_areas.append(Plain_Ground(20,480,900,600,tiles,self.offset));
+		self.walking_areas.append(Plain_Ground(1040,480,900,600,tiles,self.offset));
+		self.walking_areas.append(Plain_Ground(1520,180,300,160,tiles,self.offset));
 
 		self.mouse_position = [];
 		self.hit = False;
@@ -75,7 +81,7 @@ class Test_State:
 
 
 	def update(self,delta,key):
-		self.player.update(delta,key);
+		self.player.update(delta,key,self.camera,self.walking_areas);
 
 		if(key[K_s]):
 			self.camera[1]+=0.2*delta;
@@ -91,15 +97,7 @@ class Test_State:
 			self.hit = False;
 
 		#PLAYER GROUND COLLISIONS
-		self.player.grounded = False;
-		for rect in self.walking_areas:
-			rect.update(delta,self.player.position,self.camera);
-			if(rect.active and self.player.grounded == False and rect.hit_test(self.player.get_rect()) and self.player.position[1] + self.player.size[1]-40 < rect.get_rect()[1] and self.player.speed[1] >= 0):
-				self.player.position[1] = rect.get_rect()[1] - self.player.size[1]+5;
-				self.player.grounded = True;
-				self.player.double_jumps_counter = 0;
-				self.player.speed[1] = 0;			
-						
+		
 
 		#INIMIGOS
 		for inimigo in self.inimigos:
@@ -126,11 +124,11 @@ class Test_State:
 				self.camera[0] += 2*delta * self.player.speed[0];
 
 		if(self.camera[1] < 0 and
-		 self.player.get_rect()[1] > self.camera[1]+self.camera[3]-200):
+		 self.player.get_rect()[1] > self.camera[1]+self.camera[3]-230):
 			self.camera[1] += delta *(self.player.get_rect()[1] - self.camera[1])*0.001;
 
 
-		elif(self.player.get_rect()[1] < self.camera[1]+275):
+		elif(self.player.get_rect()[1] < self.camera[1]+320):
 			self.camera[1] -= delta * (self.player.get_rect()[1]-self.camera[1])*0.001;
 
 
@@ -147,7 +145,7 @@ class Test_State:
 		self.show_secret_image = self.secret_combo.activated;
 
 	def draw(self,display):
-		display.fill((255,255,255));
+		display.fill((185,235,250));
 
 		for rect in self.walking_areas:
 			rect.draw(display,self.camera,self.offset);
