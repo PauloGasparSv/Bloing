@@ -1,13 +1,15 @@
 import pygame as pg;
 from pygame.locals import *;
+from animation import Animation;
 
 class Goodog:
-	def __init__(self,walking_animation,death_animation,facing_right,pos,destination):
+	def __init__(self,walk_frames,death_frames,facing_right,pos,destination):
 		self.current_action = 0;
 		self.position = pos;
 		self.facing_right = facing_right;
 
-		self.animations = [walking_animation,death_animation];
+		self.animations = [Animation(walk_frames,600,True),Animation(death_frames,480,True)];
+		self.animations[1].set_once(True);
 		
 		self.size = [80,115];
 		self.grounded = False;

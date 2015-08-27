@@ -43,18 +43,19 @@ class Test_State:
 		self.player = Player(animationIDLE,animationWALK,animationJUMP,animationDEATH,[10,200]);
 
 
-		frames = [];
+		walk_frames = [];
 		for current in range(0,20):
-			frames.append(load_scaled_image("Assets/Goodog/Andando/"+str(current)+".png",self.offset));
-		animationWALK = Animation(frames,600,True);
-		frames = [];
+			walk_frames.append(load_scaled_image("Assets/Goodog/Andando/"+str(current)+".png",self.offset));
+		
+		death_frames = [];
 		for current in range(0,14):
-			frames.append(load_scaled_image("Assets/Goodog/Hit/"+str(current)+".png",self.offset));
-		animationDEATH = Animation(frames,480,True);
-		animationDEATH.set_once(True);
+			death_frames.append(load_scaled_image("Assets/Goodog/Hit/"+str(current)+".png",self.offset));
+		
 		
 		self.inimigos = []; 
-		self.inimigos.append(Goodog(animationWALK,animationDEATH,True,[1000,370],(1800,1100)));
+		self.inimigos.append(Goodog(walk_frames,death_frames,True,[1000,370],(1800,1100)));
+		self.inimigos.append(Goodog(walk_frames,death_frames,True,[1900,370],(1800,1100)));
+
 		
 		self.pit_image = load_scaled_image("Assets/Outros/alpha_black.png",(self.offset[0]*0.43,self.offset[1]*0.34));
 
