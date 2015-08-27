@@ -6,6 +6,9 @@ def load_image(path):
 def load_scaled_image(path,offset):
 	imagem = pg.image.load(path).convert_alpha();
 	return pg.transform.scale(imagem,(int(imagem.get_size()[0]*offset[0]),int(imagem.get_size()[1]*offset[1])));
+def load_scaled_image_no_alpha(path,offset):
+	imagem = pg.image.load(path).convert();
+	return pg.transform.scale(imagem,(int(imagem.get_size()[0]*offset[0]),int(imagem.get_size()[1]*offset[1])));
 
 class KeyCombo:
 	def __init__(self,combo):
