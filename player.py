@@ -2,12 +2,12 @@ import pygame as pg;
 from pygame.locals import *;
 
 class Player:
-	def __init__(self,idle_animation,walking_animation,jumping_animation,death_animation,pos):
+	def __init__(self,idle_animation,walking_animation,jumping_animation,death_animation,attack_animation,pos):
 		self.current_action = 0;
 		self.initial_position = (pos[0],pos[1]);
 		self.position = pos;
 		self.facing_right = True;
-		self.animations = [idle_animation,walking_animation,jumping_animation,death_animation];
+		self.animations = [idle_animation,walking_animation,jumping_animation,death_animation,attack_animation];
 		self.size = [100,84];
 		self.grounded = False;
 		self.speed = [0.25,0];
@@ -15,6 +15,7 @@ class Player:
 		self.pressing_right = False;
 		self.pressing_left = False;
 		self.pressing_z = False;
+		self.pressing_x = False;
 
 
 	def update(self,delta,key,camera,walking_areas):
@@ -42,22 +43,26 @@ class Player:
 			self.pressing_z = False;
 
 		#WALKING
-		if(key[K_RIGHT] and self.current_action != 3):
+		if(key[K_RIGHT]):
 			self.pressing_right = True;
 			self.position[0] += delta * self.speed[0];
-			self.facing_right = True;
-			if(self.current_action != 1 and self.grounded == True):
-				self.change_animation(1);
+			if(self.current_action < 3):
+				self.facing_right = True;
+				if(self.current_action != 1 and self.grounded == True ):
+					self.change_animation(1);
 
-		elif(key[K_LEFT] and self.current_action != 3):
+
+		elif(key[K_LEFT]):
 			self.pressing_left = True;
 			self.position[0] -= delta * self.speed[0];
-			self.facing_right = False;
-			if(self.current_action != 1 and self.grounded == True):
-				self.change_animation(1);
+			if(self.current_action < 3):
+				self.facing_right = False;
+				if(self.current_action != 1 and self.grounded == True  and self.current_action < 3):
+					self.change_animation(1);
+
 		
 		else:
-			if(self.current_action!=0 and self.grounded == True and self.current_action!=3):
+			if(self.current_action!=0 and self.grounded == True and self.current_action < 3):
 				self.change_animation(0);
 
 		if(self.grounded and key[K_z] and self.pressing_z == False and self.current_action != 3):
@@ -73,7 +78,15 @@ class Player:
 			self.speed[1] = -7;
 			self.change_animation(2);
 
-			
+		if(key[K_x] == False and self.pressing_x):
+			self.pressing_x = False;
+
+		if(key[K_x] and self.pressing_x == False):
+			self.pressing_x = True;
+			self.change_animation(4);
+
+		if(self.current_action == 4 and self.animations[4].has_played):
+			self.change_animation(0);
 
 		self.grounded = False;
 		for rect in walking_areas:
@@ -103,7 +116,11 @@ class Player:
 
 	def draw(self,display,camera,offset):
 		display.blit(self.animations[self.current_action].get_frame(not self.facing_right),((self.position[0]-camera[0])*offset[0],(self.position[1]-camera[1])*offset[1]));
-		
+		#if(self.current_action == 4):
+		#	pg.draw.rect(display,(255,255,0),((self.get_attack_rect()[0]-camera[0])*offset[0],(self.get_attack_rect()[1]-camera[1])*offset[1],self.get_attack_rect()[2]*offset[0],self.get_attack_rect()[3]*offset[1]));
+
+
+
 	def change_animation(self,action):
 		self.animations[self.current_action].stop();
 		self.current_action = action;
@@ -113,3 +130,10 @@ class Player:
 		if(self.facing_right):
 			return Rect(self.position[0]+0.3*self.size[0],self.position[1]+10,self.size[0]-0.6*self.size[0],self.size[1]-10);
 		return Rect(self.position[0]+0.3*self.size[0],self.position[1]+10,self.size[0]-0.6*self.size[0],self.size[1]-10);
+
+	def get_attack_rect(self):
+		if(self.animations[self.current_action].curr_frame > 8):
+			if(self.facing_right):
+				return Rect(self.position[0]+self.size[0]-45,self.position[1]+15,65,60);
+			return Rect(self.position[0]-20,self.position[1]+15,65,60);
+		return Rect(0,0,0,0);

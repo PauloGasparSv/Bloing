@@ -40,7 +40,13 @@ class Test_State:
 		animationDEATH = Animation(frames,900,True);
 		animationDEATH.set_once(True);
 
-		self.player = Player(animationIDLE,animationWALK,animationJUMP,animationDEATH,[10,200]);
+		frames = [];
+		for current in range(0,20):  
+			frames.append(load_scaled_image("Assets/Bloshi/Atacando/"+str(current)+".png",self.offset));
+		animationATTACK = Animation(frames,900,True);
+		animationATTACK.set_once(True);
+
+		self.player = Player(animationIDLE,animationWALK,animationJUMP,animationDEATH,animationATTACK,[10,200]);
 
 
 		walk_frames = [];

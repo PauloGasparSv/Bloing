@@ -53,6 +53,9 @@ class Goodog:
 						player.position[1] -= 21;
 						player.speed[1] = -12;
 						player.double_jumps_counter = 0;
+					elif(self.get_rect().colliderect(player.get_attack_rect()) and player.current_action == 4):
+						player.position[0] -= 5;
+						self.change_animation(1);
 					elif(player.current_action != 3):
 						player.change_animation(3);
 
