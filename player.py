@@ -132,7 +132,7 @@ class Player:
 		return Rect(self.position[0]+0.3*self.size[0],self.position[1]+10,self.size[0]-0.6*self.size[0],self.size[1]-10);
 
 	def get_attack_rect(self):
-		if(self.animations[self.current_action].curr_frame > 8):
+		if(self.animations[self.current_action].curr_frame > 6):
 			if(self.facing_right):
 				return Rect(self.position[0]+self.size[0]-45,self.position[1]+15,65,60);
 			return Rect(self.position[0]-20,self.position[1]+15,65,60);
