@@ -61,3 +61,7 @@ class Animation:
 
 	def isPlaying(self):
 		return self.playing;
+
+	def change_sprites(self,novo):
+		self.frame = novo;
+		self.length = len(novo);

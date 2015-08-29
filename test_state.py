@@ -22,24 +22,20 @@ class Test_State:
 		for current in range(0,20):
 			frames.append(load_scaled_image("Assets/Bloshi/Parado/"+str(current)+".png",self.offset));
 		animationIDLE = Animation(frames,800,True);
-
 		frames = [];
 		for current in range(0,20):
 			frames.append(load_scaled_image("Assets/Bloshi/Correndo/"+str(current)+".png",self.offset));
 		animationWALK = Animation(frames,960,True);
-
 		frames = [];
 		for current in range(0,20):  
 			frames.append(load_scaled_image("Assets/Bloshi/Pulando/"+str(current)+".png",self.offset));
 		animationJUMP = Animation(frames,1280,True);
 		animationJUMP.set_once(True);
-
 		frames = [];
 		for current in range(0,20):  
 			frames.append(load_scaled_image("Assets/Bloshi/Morrendo/"+str(current)+".png",self.offset));
 		animationDEATH = Animation(frames,900,True);
 		animationDEATH.set_once(True);
-
 		frames = [];
 		for current in range(0,20):  
 			frames.append(load_scaled_image("Assets/Bloshi/Atacando/"+str(current)+".png",self.offset));
@@ -47,6 +43,64 @@ class Test_State:
 		animationATTACK.set_once(True);
 
 		self.player = Player(animationIDLE,animationWALK,animationJUMP,animationDEATH,animationATTACK,[10,200]);
+		
+		
+
+
+
+		self.sprites = [[],[],[]];
+		self.sprites[0].append(animationIDLE.frame);
+		self.sprites[0].append(animationWALK.frame);
+		self.sprites[0].append(animationJUMP.frame);
+		self.sprites[0].append(animationDEATH.frame);
+		self.sprites[0].append(animationATTACK.frame);
+
+		idle = [];
+		for current in range(0,20):
+			idle.append(load_scaled_image("Assets/Grace/Parado/"+str(current)+".png",self.offset));
+		walk = [];
+		for current in range(0,20):
+			walk.append(load_scaled_image("Assets/Grace/Correndo/"+str(current)+".png",self.offset));
+		jump = [];
+		for current in range(0,20):  
+			jump.append(load_scaled_image("Assets/Grace/Pulando/"+str(current)+".png",self.offset));
+		death = [];
+		for current in range(0,20):  
+			death.append(load_scaled_image("Assets/Grace/Morrendo/"+str(current)+".png",self.offset));
+		atk = [];
+		for current in range(0,16):  
+			atk.append(load_scaled_image("Assets/Grace/Atacando/"+str(current)+".png",self.offset));
+		self.sprites[1].append(idle);
+		self.sprites[1].append(walk);
+		self.sprites[1].append(jump);
+		self.sprites[1].append(death);
+		self.sprites[1].append(atk);
+
+		idle = [];
+		for current in range(0,20):
+			idle.append(load_scaled_image("Assets/Sparklez/Parado/"+str(current)+".png",self.offset));
+		walk = [];
+		for current in range(0,20):
+			walk.append(load_scaled_image("Assets/Sparklez/Correndo/"+str(current)+".png",self.offset));
+		jump = [];
+		for current in range(0,20):  
+			jump.append(load_scaled_image("Assets/Sparklez/Pulando/"+str(current)+".png",self.offset));
+		death = [];
+		for current in range(0,20):  
+			death.append(load_scaled_image("Assets/Sparklez/Morrendo/"+str(current)+".png",self.offset));
+		atk = [];
+		for current in range(0,16):  
+			atk.append(load_scaled_image("Assets/Sparklez/Atacando/"+str(current)+".png",self.offset));
+		self.sprites[2].append(idle);
+		self.sprites[2].append(walk);
+		self.sprites[2].append(jump);
+		self.sprites[2].append(death);
+		self.sprites[2].append(atk);
+
+
+
+
+
 
 
 		walk_frames = [];
@@ -84,16 +138,24 @@ class Test_State:
 		self.hit = False;
 
 
+		self.pressing_c = False;
+		self.curr_c = 0;
+
 		self.secret_combo = KeyCombo("UUDDLRLRBA");
 
 
 	def update(self,delta,key):
 		self.player.update(delta,key,self.camera,self.walking_areas);
 
-		if(key[K_s]):
-			self.camera[1]+=0.2*delta;
-		if(key[K_w]):
-			self.camera[1]-=0.2*delta;
+		if(self.pressing_c and key[K_c] == False):
+			self.pressing_c = False;
+		if(key[K_c] and self.pressing_c == False):
+			self.pressing_c = True;
+			self.curr_c += 1;
+			if(self.curr_c > 2):
+				self.curr_c = 0;
+			for i in range(0,5):
+				self.player.animations[i].change_sprites(self.sprites[self.curr_c][i]);
 
 		self.mouse_position = [pg.mouse.get_pos()[0],pg.mouse.get_pos()[1]];
 		
