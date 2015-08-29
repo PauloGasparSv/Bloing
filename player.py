@@ -37,33 +37,35 @@ class Player:
 
 		if(key[K_RIGHT] == False and self.pressing_right == True):
 			self.pressing_right = False;
+			if(self.current_action != 4):
+				self.speed[0] = 0;
 		if(key[K_LEFT] == False and self.pressing_left == True):
 			self.pressing_left = False;
+			if(self.current_action != 4):
+				self.speed[0] = 0;
 		if(key[K_z] == False and self.pressing_z == True):
 			self.pressing_z = False;
 
 		#WALKING
-		if(key[K_RIGHT]):
+		if(key[K_RIGHT] and self.current_action < 3):
 			self.pressing_right = True;
-			self.position[0] += delta * self.speed[0];
-			if(self.current_action < 3):
-				self.facing_right = True;
-				if(self.current_action != 1 and self.grounded == True ):
-					self.change_animation(1);
+			self.facing_right = True;
+			self.speed[0] = 0.25;
+			if(self.current_action != 1 and self.grounded == True ):
+				self.change_animation(1);
 
 
-		elif(key[K_LEFT]):
+		elif(key[K_LEFT] and self.current_action < 3):
 			self.pressing_left = True;
-			self.position[0] -= delta * self.speed[0];
-			if(self.current_action < 3):
-				self.facing_right = False;
-				if(self.current_action != 1 and self.grounded == True  and self.current_action < 3):
-					self.change_animation(1);
-
-		
+			self.facing_right = False;
+			self.speed[0] = 0.25;
+			if(self.current_action != 1 and self.grounded == True  and self.current_action < 3):
+				self.change_animation(1);		
 		else:
 			if(self.current_action!=0 and self.grounded == True and self.current_action < 3):
 				self.change_animation(0);
+				self.speed[0] = 0;
+
 
 		if(self.grounded and key[K_z] and self.pressing_z == False and self.current_action != 3):
 			self.pressing_z = True;
@@ -81,7 +83,7 @@ class Player:
 		if(key[K_x] == False and self.pressing_x):
 			self.pressing_x = False;
 
-		if(key[K_x] and self.pressing_x == False):
+		if(key[K_x] and self.pressing_x == False and self.current_action != 4):
 			self.pressing_x = True;
 			self.change_animation(4);
 
@@ -97,16 +99,20 @@ class Player:
 				self.double_jumps_counter = 0;
 				self.speed[1] = 0;			
 
-
-
 		if(self.grounded == False):
 			self.speed[1] += delta * 0.025;
 			if(self.current_action < 2):
 				self.change_animation(2);
+		else:
+			if(self.current_action == 4):
+				self.speed[0] = 0;
 		
 
 		self.position[1] += self.speed[1]*delta * 0.058;
-
+		if(self.speed[0] != 0 and self.facing_right):
+			self.position[0] += delta * self.speed[0];
+		elif(self.speed[0] != 0 and self.facing_right == False):
+			self.position[0] -= delta * self.speed[0];
 
 		self.animations[self.current_action].update(delta);
 		if(self.speed[1] > 10):
@@ -116,10 +122,7 @@ class Player:
 
 	def draw(self,display,camera,offset):
 		display.blit(self.animations[self.current_action].get_frame(not self.facing_right),((self.position[0]-camera[0])*offset[0],(self.position[1]-camera[1])*offset[1]));
-		#if(self.current_action == 4):
-		#	pg.draw.rect(display,(255,255,0),((self.get_attack_rect()[0]-camera[0])*offset[0],(self.get_attack_rect()[1]-camera[1])*offset[1],self.get_attack_rect()[2]*offset[0],self.get_attack_rect()[3]*offset[1]));
-
-
+		#pg.draw.rect(display,(0,255,255),(offset[0]*(self.get_attack_rect()[0]-camera[0]),offset[1]*(self.get_attack_rect()[1]-camera[1]),offset[0]*self.get_attack_rect()[2],offset[1]*self.get_attack_rect()[3]))
 
 	def change_animation(self,action):
 		self.animations[self.current_action].stop();
@@ -132,8 +135,8 @@ class Player:
 		return Rect(self.position[0]+0.3*self.size[0],self.position[1]+10,self.size[0]-0.6*self.size[0],self.size[1]-10);
 
 	def get_attack_rect(self):
-		if(self.animations[self.current_action].curr_frame > 6):
+		if(self.current_action == 4 and self.animations[self.current_action].curr_frame > 8 and self.animations[self.current_action].curr_frame < 16):
 			if(self.facing_right):
-				return Rect(self.position[0]+self.size[0]-45,self.position[1]+15,65,60);
-			return Rect(self.position[0]-20,self.position[1]+15,65,60);
+				return Rect(self.position[0]+self.size[0]-45,self.position[1]+15,45,60);
+			return Rect(self.position[0],self.position[1]+15,45,60);
 		return Rect(0,0,0,0);

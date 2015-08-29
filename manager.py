@@ -8,7 +8,7 @@ class Manager:
 	def __init__(self):
 		#RESOLTUIONS ISSUES
 		self.RESOLUTIONS = [(1366,768),(683,768/2),(1024,768),(800,600)];
-		self.FULL_SCREEN = False;
+		self.FULL_SCREEN = False ;
 
 		self.WIDTH = pg.display.Info().current_w;
 		self.HEIGHT = pg.display.Info().current_h;
