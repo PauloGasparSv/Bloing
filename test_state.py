@@ -5,6 +5,7 @@ from pygame.locals import *;
 from tools import *;
 from ground import *;
 from goodog import *;
+from smart_background import *;
 
 class Test_State: 
 	def __init__(self,display,resolution):
@@ -42,7 +43,7 @@ class Test_State:
 		animationATTACK = Animation(frames,900,True);
 		animationATTACK.set_once(True);
 
-		self.player = Player(animationIDLE,animationWALK,animationJUMP,animationDEATH,animationATTACK,[10,200]);
+		self.player = Player(animationIDLE,animationWALK,animationJUMP,animationDEATH,animationATTACK,[20,-200]);
 		
 		
 
@@ -113,9 +114,8 @@ class Test_State:
 		
 		
 		self.inimigos = []; 
-		self.inimigos.append(Goodog(walk_frames,death_frames,True,[1000,380],(1800,1100)));
-		self.inimigos.append(Goodog(walk_frames,death_frames,True,[1900,380],(1800,1100)));
-
+		self.inimigos.append(Goodog(walk_frames,death_frames,True,[1000,520],(1800,1100)));
+		self.inimigos.append(Goodog(walk_frames,death_frames,True,[1900,520],(1800,1100)));
 		
 		self.pit_image = load_scaled_image("Assets/Outros/alpha_black.png",(self.offset[0]*0.43,self.offset[1]*0.34));
 
@@ -125,14 +125,23 @@ class Test_State:
 			tiles.append(load_scaled_image("Assets/Tileset/"+str(i)+".png",self.offset));
 
 
+		self.background = [];
+		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada4.png",self.offset),[-600,220],4,1015,0.1));
+		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada3.png",self.offset),[100,210],4,1015,0.2));
+		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada2.png",self.offset),[0,200],4,1015,0.3));
+		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada1.png",self.offset),[-10,230],4,1015,0.4));
+		
+
+
 		#GAME PLAY STUFF
-		self.camera = [0,-200,1366,768];
+		self.camera = [0,-600,1366,768];
 		self.world_end = [-4900,5000];
 
 		self.walking_areas = []; 
-		self.walking_areas.append(Plain_Ground(20,480,900,600,tiles,self.offset));
-		self.walking_areas.append(Plain_Ground(1040,480,900,600,tiles,self.offset));
-		self.walking_areas.append(Plain_Ground(1520,180,300,160,tiles,self.offset));
+		self.walking_areas.append(Plain_Ground(20,620,900,600,tiles,self.offset));
+		self.walking_areas.append(Plain_Ground(1040,620,4500,600,tiles,self.offset));
+		self.walking_areas.append(Plain_Ground(1520,320,300,160,tiles,self.offset));
+		self.walking_areas.append(Plain_Ground(1950,180,900,160,tiles,self.offset));
 
 		self.mouse_position = [];
 		self.hit = False;
@@ -176,36 +185,56 @@ class Test_State:
 		#CAMERA UPDATE
 		if(self.player.get_rect()[0] < -500 and self.player.get_rect()[0] < self.camera[0]+500 and 
 		 self.camera[0] > self.world_end[0]+10):
-			self.camera[0] -= delta * self.player.speed[0];
+			if(self.player.speed[0] == 0.3):
+				self.camera[0] -= delta * 0.3;
+			else:
+				self.camera[0] -= delta * 0.25;
 			if(self.player.get_rect()[0] < self.camera[0]+ 300):
-				self.camera[0] -= 2*delta * self.player.speed[0];
+				self.camera[0] -= 2*delta * 0.25;
 
 		if(self.camera[0] > 10 and
 		 self.player.get_rect()[0] < self.camera[0]+500):
-			self.camera[0] -= delta * self.player.speed[0];
+			if(self.player.speed[0] == 0.3):
+				self.camera[0] -= delta * 0.3;
+			else:
+				self.camera[0] -= delta * 0.25;
 			if(self.player.get_rect()[0] < self.camera[0]+ 300):
-				self.camera[0] -= 2*delta * self.player.speed[0];
+				self.camera[0] -= 2*delta * 0.25;
 
 		if(self.camera[0] < self.world_end[1] + 1356 and 
 			self.player.position[0] + self.player.get_rect()[2] > self.camera[0]+866):
-			self.camera[0] += delta * self.player.speed[0];
+			if(self.player.speed[0] == 0.3):
+				self.camera[0] += delta * 0.3;
+			else:
+				self.camera[0] += delta * 0.25;
 			if(self.player.get_rect()[0] > self.camera[0]+self.camera[2]- 300):
-				self.camera[0] += 2*delta * self.player.speed[0];
+				self.camera[0] += 2*delta * 0.25;
 
 		if(self.camera[1] < 0 and
 		 self.player.get_rect()[1] > self.camera[1]+self.camera[3]-230):
-			self.camera[1] += delta *(self.player.get_rect()[1] - self.camera[1])*0.001;
+			self.camera[1] += delta *0.45;
 
 
 		elif(self.player.get_rect()[1] < self.camera[1]+320):
-			self.camera[1] -= delta * (self.player.get_rect()[1]-self.camera[1])*0.001;
+			self.camera[1] -= delta *0.45;
+
+		for bg in self.background:
+			bg.update(delta,self.camera);
 
 
 		# OFF WORLD LIMITS PLAYER
 		if(self.player.get_rect()[1] >self.camera[1]+self.camera[3] + 300):
 			self.player.speed[1] = 0;	
 			self.player.change_animation(0);
-			self.player.position = [0,200];
+			self.player.position = [20,-200];
+			if(self.player.position[0] - self.camera[0] > 2500):
+				self.camera[0] += self.player.position[0]-self.camera[0];
+			elif(self.player.position[0] - self.camera[0] < -2500):
+				self.camera[0] -= self.camera[0]-self.player.position[0];
+			if(self.player.position[1] - self.camera[1] > 1500):
+			 	self.camera[1] += 1500;
+			elif(self.player.position[1] - self.camera[1] < -1500):
+				self.camera[1] -= 1500;
 			self.player.double_jumps_counter = 0;
 			self.player.grounded = False;
 
@@ -215,6 +244,9 @@ class Test_State:
 
 	def draw(self,display):
 		display.fill((185,235,250));
+
+		for bg in self.background:
+			bg.draw(display,self.camera,self.offset);
 
 		for rect in self.walking_areas:
 			rect.draw(display,self.camera,self.offset);

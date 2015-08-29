@@ -19,19 +19,24 @@ class Player:
 
 
 	def update(self,delta,key,camera,walking_areas):
-		if(key[K_RSHIFT]):
-			self.change_animation(3);
-
+		
 		if(self.current_action == 3 and self.animations[self.current_action].has_played):
 			self.position[0] = self.initial_position[0];
-			self.position[1] = self.initial_position[1];
-			self.speed[1] = 0;
+			self.position[1] = self.initial_position[1];			
 			self.change_animation(0);
+			if(self.position[0] - camera[0] > 2500):
+				camera[0] += self.position[0]-camera[0];
+			elif(self.position[0] - camera[0] < -2500):
+				camera[0] -= camera[0]-self.position[0];
+			if(self.position[1] - camera[1] > 1500):
+			 	camera[1] += 1500;
+			elif(self.position[1] - camera[1] < -1500):
+				camera[1] -= 1500;
 
 		if(key[K_LSHIFT] and self.speed[0] == 0.25):
-			self.speed[0] = 0.35;
+			self.speed[0] = 0.3;
 			self.animations[1].set_speed(1200);
-		if(self.speed[0] == 0.35 and key[K_LSHIFT] == False):
+		if(self.speed[0] == 0.3 and key[K_LSHIFT] == False):
 			self.speed[0] = 0.25;
 			self.animations[1].set_speed(960);
 
@@ -50,7 +55,8 @@ class Player:
 		if(key[K_RIGHT] and self.current_action < 3):
 			self.pressing_right = True;
 			self.facing_right = True;
-			self.speed[0] = 0.25;
+			if(self.speed[0] != 0.3):
+				self.speed[0] = 0.25;
 			if(self.current_action != 1 and self.grounded == True ):
 				self.change_animation(1);
 
@@ -58,7 +64,8 @@ class Player:
 		elif(key[K_LEFT] and self.current_action < 3):
 			self.pressing_left = True;
 			self.facing_right = False;
-			self.speed[0] = 0.25;
+			if(self.speed[0] != 0.3):
+				self.speed[0] = 0.25;
 			if(self.current_action != 1 and self.grounded == True  and self.current_action < 3):
 				self.change_animation(1);		
 		else:
@@ -83,7 +90,7 @@ class Player:
 		if(key[K_x] == False and self.pressing_x):
 			self.pressing_x = False;
 
-		if(key[K_x] and self.pressing_x == False and self.current_action != 4):
+		if(key[K_x] and self.pressing_x == False and self.current_action < 3):
 			self.pressing_x = True;
 			self.change_animation(4);
 
@@ -109,9 +116,9 @@ class Player:
 		
 
 		self.position[1] += self.speed[1]*delta * 0.058;
-		if(self.speed[0] != 0 and self.facing_right):
+		if(self.speed[0] != 0 and self.facing_right and self.current_action != 3):
 			self.position[0] += delta * self.speed[0];
-		elif(self.speed[0] != 0 and self.facing_right == False):
+		elif(self.speed[0] != 0 and self.facing_right == False and self.current_action != 3):
 			self.position[0] -= delta * self.speed[0];
 
 		self.animations[self.current_action].update(delta);
@@ -137,6 +144,6 @@ class Player:
 	def get_attack_rect(self):
 		if(self.current_action == 4 and self.animations[self.current_action].curr_frame > 8 and self.animations[self.current_action].curr_frame < 16):
 			if(self.facing_right):
-				return Rect(self.position[0]+self.size[0]-45,self.position[1]+15,45,60);
-			return Rect(self.position[0],self.position[1]+15,45,60);
+				return Rect(self.position[0]+self.size[0]-45,self.position[1]+15,40,60);
+			return Rect(self.position[0]-5,self.position[1]+15,40,60);
 		return Rect(0,0,0,0);

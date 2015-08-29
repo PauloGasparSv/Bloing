@@ -53,7 +53,7 @@ class Goodog:
 						self.change_animation(1);
 
 				if(self.current_action != 1 and player.get_rect().colliderect(self.get_rect())):
-					if(player.get_rect()[1]+player.get_rect()[3] < self.get_rect()[1]+25 and player.speed[1] > 0):
+					if(player.current_action != 3 and player.get_rect()[1]+player.get_rect()[3] < self.get_rect()[1]+32 and player.speed[1] > 0):
 						self.change_animation(1);
 						player.change_animation(2);
 						player.position[1] -= 21;

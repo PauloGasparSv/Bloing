@@ -11,7 +11,7 @@ pg.display.set_caption("Bloing");
 
 def main():
 	RUNNING = True;
-	FPS = 60;
+	FPS = 120;
 	time_since_started = 0;
 
 	manager = Manager();
