@@ -94,7 +94,7 @@ class Player:
 		for rect in walking_areas:
 			rect.update(delta,self.position,camera);
 			if(rect.active and self.grounded == False and rect.hit_test(self.get_rect()) and self.position[1] + self.size[1]-40 < rect.get_rect()[1] and self.speed[1] >= 0):
-				self.position[1] = rect.get_rect()[1] - self.size[1]+5;
+				self.position[1] = rect.get_rect()[1] - self.size[1]+15;
 				self.grounded = True;
 				self.double_jumps_counter = 0;
 				self.speed[1] = 0;			

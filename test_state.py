@@ -113,8 +113,8 @@ class Test_State:
 		
 		
 		self.inimigos = []; 
-		self.inimigos.append(Goodog(walk_frames,death_frames,True,[1000,370],(1800,1100)));
-		self.inimigos.append(Goodog(walk_frames,death_frames,True,[1900,370],(1800,1100)));
+		self.inimigos.append(Goodog(walk_frames,death_frames,True,[1000,380],(1800,1100)));
+		self.inimigos.append(Goodog(walk_frames,death_frames,True,[1900,380],(1800,1100)));
 
 		
 		self.pit_image = load_scaled_image("Assets/Outros/alpha_black.png",(self.offset[0]*0.43,self.offset[1]*0.34));
