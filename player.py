@@ -19,7 +19,6 @@ class Player:
 
 
 	def update(self,delta,key,camera,walking_areas):
-		print(self.position);
 		if(self.current_action == 3 and self.animations[self.current_action].has_played):
 			self.position[0] = self.initial_position[0];
 			self.position[1] = self.initial_position[1];			
@@ -142,7 +141,7 @@ class Player:
 		return Rect(self.position[0]+0.3*self.size[0],self.position[1]+10,self.size[0]-0.6*self.size[0],self.size[1]-10);
 
 	def get_attack_rect(self):
-		if(self.current_action == 4 and self.animations[self.current_action].curr_frame > 8 and self.animations[self.current_action].curr_frame < 16):
+		if(self.current_action == 4 and self.animations[self.current_action].curr_frame > 5 and self.animations[self.current_action].curr_frame < 16):
 			if(self.facing_right):
 				return Rect(self.position[0]+self.size[0]-45,self.position[1]+15,40,60);
 			return Rect(self.position[0]-5,self.position[1]+15,40,60);

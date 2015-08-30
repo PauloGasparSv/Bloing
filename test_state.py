@@ -112,8 +112,16 @@ class Test_State:
 		
 		
 		self.inimigos = []; 
-		self.inimigos.append(Goodog(walk_frames,death_frames,True,[1000,520],(1800,1100)));
+		self.inimigos.append(Goodog(walk_frames,death_frames,False,[1200,520],(1800,1100)));
 		self.inimigos.append(Goodog(walk_frames,death_frames,True,[1900,520],(1800,1100)));
+
+		self.inimigos.append(Goodog(walk_frames,death_frames,True,[3000,520],(4200,2900)));
+
+		self.inimigos.append(Goodog(walk_frames,death_frames,False,[3600,520],(4200,3000)));
+		self.inimigos.append(Goodog(walk_frames,death_frames,False,[4200,520],(5000,3600)));
+		
+		self.inimigos.append(Goodog(walk_frames,death_frames,True,[2500,520],(3200,2400)));
+		self.inimigos.append(Goodog(walk_frames,death_frames,False,[2900,520],(3000,2300)));
 		
 		self.pit_image = load_scaled_image("Assets/Outros/alpha_black.png",(self.offset[0]*0.43,self.offset[1]*0.34));
 
@@ -124,33 +132,43 @@ class Test_State:
 
 
 		self.background = [];
-		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada4.png",self.offset),[-1600,220],4,1015,0.1));
-		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada3.png",self.offset),[-900,210],4,1015,0.2));
-		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada2.png",self.offset),[-1000,200],4,1015,0.3));
-		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada1.png",self.offset),[-1010,230],4,1015,0.4));
+		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada4.png",self.offset),[-1600,220],4,1015,0.05));
+		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada3.png",self.offset),[-900,210],4,1015,0.1));
+		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada2.png",self.offset),[-1000,200],4,1015,0.15));
+		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada1.png",self.offset),[-1010,230],4,1015,0.2));
 		
 
 		self.village_image = load_scaled_image("Assets/Cenario/vilarejo.png",self.offset);
-		self.village_position = (4000,-100);
+		self.village_position = (5200,-100);
 
+		self.flower_images = [pg.transform.scale(load_scaled_image("Assets/Cenario/arvore1.png",self.offset),(425,591)),
+			pg.transform.scale(load_scaled_image("Assets/Cenario/arvore2.png",self.offset),(523,569)),
+			pg.transform.scale(load_scaled_image("Assets/Cenario/arvore3.png",self.offset),(539,636)),
+			pg.transform.scale(load_scaled_image("Assets/Cenario/arvore4.png",self.offset),(425,591)),
+			pg.transform.scale(load_scaled_image("Assets/Cenario/arbusto1.png",self.offset),(293,112)),
+			pg.transform.scale(load_scaled_image("Assets/Cenario/arbusto2.png",self.offset),(222,155)),
+			pg.transform.scale(load_scaled_image("Assets/Cenario/arbusto3.png",self.offset),(247,119))];
+
+		self.flower_positions = ((420,32,0),(1100,52,1),(4000,32,0),(4100,-12,2),(3600,52,1),
+			(3900,32,3),(4200,50,1),(4420,32,0),(1700,520,4),(2200,475,5),(2600,475,5),(100,510,6),(3000,510,6),(2000,510,6),(2400,520,4));
 
 
 		#GAME PLAY STUFF
 		self.camera = [0,-600,1366,768];
-		self.world_end = [-4900,5000];
+		self.world_end = [-4900,7000];
 
 		self.walking_areas = []; 
 
-		self.walking_areas.append(Ramp_45(3800,470,tiles,1,self.offset));
-		self.walking_areas.append(Ramp_45(3500,470,tiles,0,self.offset));
+		self.walking_areas.append(Ramp_45(3500,470,tiles,1,self.offset));
+		self.walking_areas.append(Ramp_45(3200,470,tiles,0,self.offset));
 		#self.walking_areas.append(Ramp_45(400,470,tiles,0,self.offset));
 		#self.walking_areas.append(Ramp_45(400,470,tiles,0,self.offset));
 
 
-		self.walking_areas.append(Single_Tile(3650,470,3,tiles,self.offset));
+		self.walking_areas.append(Single_Tile(3350,470,3,tiles,self.offset));
 
 		self.walking_areas.append(Plain_Ground(20,620,900,600,tiles,self.offset));
-		self.walking_areas.append(Plain_Ground(1040,620,6600,600,tiles,self.offset));
+		self.walking_areas.append(Plain_Ground(1040,620,9600,600,tiles,self.offset));
 		self.walking_areas.append(Plain_Ground(1520,320,300,160,tiles,self.offset));
 		self.walking_areas.append(Plain_Ground(1950,180,900,160,tiles,self.offset));
 		self.walking_areas.append(Plain_Ground(-1900,620,1800,160,tiles,self.offset));
@@ -181,6 +199,8 @@ class Test_State:
 				self.curr_c = 0;
 			for i in range(0,5):
 				self.player.animations[i].change_sprites(self.sprites[self.curr_c][i]);
+				if(self.player.current_action == 4 and self.player.animations[4].curr_frame>15):
+					self.player.change_animation(0);
 
 		self.mouse_position = [pg.mouse.get_pos()[0],pg.mouse.get_pos()[1]];
 		
@@ -234,6 +254,9 @@ class Test_State:
 		elif(self.player.get_rect()[1] < self.camera[1]+320):
 			self.camera[1] -= delta *0.45;
 
+		if(self.camera[0] > self.world_end[1]):
+			self.camera[0] = self.world_end[1];
+
 		for bg in self.background:
 			bg.update(delta,self.camera);
 
@@ -259,14 +282,17 @@ class Test_State:
 		self.show_secret_image = self.secret_combo.activated;
 
 	def draw(self,display):
-		display.fill((185,235,250));
+		display.fill((170,250,250));
 
 		for bg in self.background:
 			bg.draw(display,self.camera,self.offset);
 
+		if(self.camera[0] > 3600):
+			display.blit(self.village_image,((self.village_position[0]-self.camera[0])*self.offset[0],(self.village_position[1]-self.camera[1])*self.offset[1]));
 
-		display.blit(self.village_image,(self.village_position[0]-self.camera[0],self.village_position[1]-self.camera[1]));
 
+		for f in self.flower_positions:
+			display.blit(self.flower_images[f[2]],(f[0]-self.camera[0],f[1]-self.camera[1]));
 
 		for rect in self.walking_areas:
 			rect.draw(display,self.camera,self.offset);
