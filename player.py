@@ -19,13 +19,13 @@ class Player:
 
 
 	def update(self,delta,key,camera,walking_areas):
-		
+		print(self.position);
 		if(self.current_action == 3 and self.animations[self.current_action].has_played):
 			self.position[0] = self.initial_position[0];
 			self.position[1] = self.initial_position[1];			
 			self.change_animation(0);
 			if(self.position[0] - camera[0] > 2500):
-				camera[0] += self.position[0]-camera[0];
+				camera[0] += self.position[0]- camera[0];
 			elif(self.position[0] - camera[0] < -2500):
 				camera[0] -= camera[0]-self.position[0];
 			if(self.position[1] - camera[1] > 1500):
@@ -100,7 +100,7 @@ class Player:
 		self.grounded = False;
 		for rect in walking_areas:
 			rect.update(delta,self.position,camera);
-			if(rect.active and self.grounded == False and rect.hit_test(self.get_rect()) and self.position[1] + self.size[1]-40 < rect.get_rect()[1] and self.speed[1] >= 0):
+			if(rect.active and self.grounded == False and rect.hit_test(self) and self.position[1] + self.size[1]-40 < rect.get_rect()[1] and self.speed[1] >= 0):
 				self.position[1] = rect.get_rect()[1] - self.size[1]+15;
 				self.grounded = True;
 				self.double_jumps_counter = 0;

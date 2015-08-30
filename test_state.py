@@ -47,8 +47,6 @@ class Test_State:
 		
 		
 
-
-
 		self.sprites = [[],[],[]];
 		self.sprites[0].append(animationIDLE.frame);
 		self.sprites[0].append(animationWALK.frame);
@@ -126,11 +124,15 @@ class Test_State:
 
 
 		self.background = [];
-		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada4.png",self.offset),[-600,220],4,1015,0.1));
-		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada3.png",self.offset),[100,210],4,1015,0.2));
-		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada2.png",self.offset),[0,200],4,1015,0.3));
-		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada1.png",self.offset),[-10,230],4,1015,0.4));
+		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada4.png",self.offset),[-1600,220],4,1015,0.1));
+		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada3.png",self.offset),[-900,210],4,1015,0.2));
+		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada2.png",self.offset),[-1000,200],4,1015,0.3));
+		self.background.append(Smart_Background(load_scaled_image("Assets/Cenario/camada1.png",self.offset),[-1010,230],4,1015,0.4));
 		
+
+		self.village_image = load_scaled_image("Assets/Cenario/vilarejo.png",self.offset);
+		self.village_position = (4000,-100);
+
 
 
 		#GAME PLAY STUFF
@@ -138,10 +140,24 @@ class Test_State:
 		self.world_end = [-4900,5000];
 
 		self.walking_areas = []; 
+
+		self.walking_areas.append(Ramp_45(3800,470,tiles,1,self.offset));
+		self.walking_areas.append(Ramp_45(3500,470,tiles,0,self.offset));
+		#self.walking_areas.append(Ramp_45(400,470,tiles,0,self.offset));
+		#self.walking_areas.append(Ramp_45(400,470,tiles,0,self.offset));
+
+
+		self.walking_areas.append(Single_Tile(3650,470,3,tiles,self.offset));
+
 		self.walking_areas.append(Plain_Ground(20,620,900,600,tiles,self.offset));
-		self.walking_areas.append(Plain_Ground(1040,620,4500,600,tiles,self.offset));
+		self.walking_areas.append(Plain_Ground(1040,620,6600,600,tiles,self.offset));
 		self.walking_areas.append(Plain_Ground(1520,320,300,160,tiles,self.offset));
 		self.walking_areas.append(Plain_Ground(1950,180,900,160,tiles,self.offset));
+		self.walking_areas.append(Plain_Ground(-1900,620,1800,160,tiles,self.offset));
+
+
+
+
 
 		self.mouse_position = [];
 		self.hit = False;
@@ -248,6 +264,10 @@ class Test_State:
 		for bg in self.background:
 			bg.draw(display,self.camera,self.offset);
 
+
+		display.blit(self.village_image,(self.village_position[0]-self.camera[0],self.village_position[1]-self.camera[1]));
+
+
 		for rect in self.walking_areas:
 			rect.draw(display,self.camera,self.offset);
 
@@ -255,8 +275,8 @@ class Test_State:
 			inimigo.draw(display,self.camera,self.offset);
 
 		if(self.show_secret_image):
-			display.blit(pg.transform.scale(self.secret_image,(300,300)),((-4890-self.camera[0])*self.offset[0],(200-self.camera[1])*self.offset[1]));
-			display.blit(self.fonte.render("Emma Watson > Emma Stone",False,(0,0,0)),((-4890-self.camera[0])*self.offset[0],(120-self.camera[1])*self.offset[0]));
+			display.blit(pg.transform.scale(self.secret_image,(300,300)),((-2000-self.camera[0])*self.offset[0],(200-self.camera[1])*self.offset[1]));
+			display.blit(self.fonte.render("Emma Watson > Emma Stone",False,(0,0,0)),((-2000-self.camera[0])*self.offset[0],(120-self.camera[1])*self.offset[0]));
 		
 		self.player.draw(display,self.camera,self.offset);
 
