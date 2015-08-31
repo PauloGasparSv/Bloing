@@ -1,6 +1,7 @@
 import pygame as pg;
 from pygame.locals import *;
 from test_state import Test_State;
+from splash_screen import Splash_Screen;
 
 #-1 TESTE STATE
 
@@ -28,14 +29,17 @@ class Manager:
 		self.change_resolution(0);
 
 		#GAME STATES
-		self.current_state_index = -1;
-		self.current_state = Test_State(self.display,self.RESOLUTIONS[self.resolution]);
+		self.current_state_index = 0;
+		self.current_state = Splash_Screen(self.display,self.RESOLUTIONS[self.resolution]);
 		
 
 	def update(self,delta):
 		key = pg.key.get_pressed();
 		self.current_state.update(delta,key);
-		
+
+		if(self.current_state.next_state):
+			self.set_state(self.current_state_index+1);	
+
 
 
 
@@ -45,9 +49,12 @@ class Manager:
 
 
 	def set_state(self,next_state):
-		if(next_state == -1):
+		if(next_state == 1):
 			self.current_state_index = next_state;
 			self.current_state = Test_State(self.display,self.RESOLUTIONS[self.resolution]);
+		if(next_state == 0):
+			self.current_state_index = next_state;
+			self.current_state = Splash_Screen(self.display,self.RESOLUTIONS[self.resolution]);
 
 	def change_resolution(self,res):
 		self.resolution = res;	

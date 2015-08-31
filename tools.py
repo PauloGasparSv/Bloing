@@ -71,3 +71,67 @@ class KeyCombo:
 			if(self.temp == self.combo):
 				self.activated = True;
 
+class FadeOut:	
+	def __init__(self,speed):
+		self.black = pg.Surface([1400,1400],pg.SRCALPHA,32).convert();
+		self.alpha = 0;#TRANSPARENTE
+		self.black.fill((0,0,0));
+		self.black.set_alpha(0);
+		self.speed = speed;
+		self.activated = False;
+
+	def isBlack(self):
+		if(self.alpha == 255):
+			return True;
+		else:
+			return False;
+
+
+	def start(self):
+		self.activated = True;
+
+	def update(self,delta):
+		if(self.activated):
+			self.alpha += (self.speed * delta)/100.0;
+			if(self.alpha > 255):
+				self.alpha = 255;
+			self.black.set_alpha(self.alpha);
+
+	def draw(self,display):
+		if(self.activated):
+			display.blit(self.black,(0,0));
+
+	def stop(self):
+		self.activated = False;
+
+class FadeIn:
+	def __init__(self,speed):
+		self.black = pg.Surface([1400,1400],pg.SRCALPHA,32).convert();
+		self.alpha = 255;#OPACO
+		self.black.fill((0,0,0));
+		self.black.set_alpha(255);
+		self.speed = speed;
+		self.activated = False;
+
+	def isBlack(self):
+		if(self.alpha != 0):
+			return True;
+		else:
+			return False;
+ 
+	def start(self):
+		self.activated = True;
+
+	def update(self,delta):
+		if(self.activated):
+			self.alpha -= (self.speed * delta)/100.0;
+			if(self.alpha < 0):
+				self.alpha = 0;
+			self.black.set_alpha(self.alpha);
+
+	def draw(self,display):
+		if(self.activated):
+			display.blit(self.black,(0,0));
+
+	def stop(self):
+		self.activated = False;

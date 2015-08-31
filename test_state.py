@@ -202,7 +202,7 @@ class Test_State:
 
 
 		self.secret_combo = KeyCombo("UUDDLRLRBA");
-
+		self.next_state = False;
 
 	def update(self,delta,key):
 		self.player.update(delta,key,self.camera,self.walking_areas);
@@ -222,12 +222,7 @@ class Test_State:
 
 		self.mouse_position = [pg.mouse.get_pos()[0],pg.mouse.get_pos()[1]];
 		
-		#HIT TEST TESTER
-		if(self.player.get_rect().colliderect((self.mouse_position[0],self.mouse_position[1],30*self.offset[0],30*self.offset[1]))):
-			self.hit = True;
-		else:
-			self.hit = False;
-
+		
 		#PLAYER GROUND COLLISIONS
 		
 
@@ -328,11 +323,6 @@ class Test_State:
 			display.blit(self.fonte.render("Emma Watson > Emma Stone",False,(0,0,0)),((-2000-self.camera[0])*self.offset[0],(120-self.camera[1])*self.offset[0]));
 		
 		self.player.draw(display,self.camera,self.offset);
-
-		if(self.hit):
-			pg.draw.rect(display,(255,0,0),(self.mouse_position[0],self.mouse_position[1],30*self.offset[0],30*self.offset[1]));
-		else:
-			pg.draw.rect(display,(0,255,255),(self.mouse_position[0],self.mouse_position[1],30*self.offset[0],30*self.offset[1]));
 
 		display.blit(self.fonte.render("Coins: "+str(self.player.cash),False,(0,0,0)),(0,0));
 		
