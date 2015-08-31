@@ -16,6 +16,7 @@ class Player:
 		self.pressing_left = False;
 		self.pressing_z = False;
 		self.pressing_x = False;
+		self.cash = 0;
 
 
 	def update(self,delta,key,camera,walking_areas):
@@ -31,6 +32,8 @@ class Player:
 			 	camera[1] += 1500;
 			elif(self.position[1] - camera[1] < -1500):
 				camera[1] -= 1500;
+
+
 
 		if(key[K_LSHIFT] and self.speed[0] == 0.25):
 			self.speed[0] = 0.3;

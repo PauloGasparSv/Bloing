@@ -6,10 +6,10 @@ from tools import *;
 from ground import *;
 from goodog import *;
 from smart_background import *;
+from itens import *;
 
 class Test_State: 
 	def __init__(self,display,resolution):
-		
 		self.offset = (resolution[0]/1366.0,resolution[1]/768.0);
 		
 		#FONTE
@@ -90,6 +90,7 @@ class Test_State:
 		atk = [];
 		for current in range(0,16):  
 			atk.append(load_scaled_image("Assets/Sparklez/Atacando/"+str(current)+".png",self.offset));
+		
 		self.sprites[2].append(idle);
 		self.sprites[2].append(walk);
 		self.sprites[2].append(jump);
@@ -97,10 +98,24 @@ class Test_State:
 		self.sprites[2].append(atk);
 
 
+		coin_idle = [];
+		for current in range(0,16):
+			coin_idle.append(load_scaled_image("Assets/Itens/Moeda_Parada/"+str(current)+".png",self.offset));
+		coin_taken = [];
+		for current in range(0,20):
+			coin_taken.append(load_scaled_image("Assets/Itens/Moeda_Pega/"+str(current)+".png",self.offset));
+	
+		self.itens = [];
+		for i in range(0,4):
+			self.itens.append(Coin((660+i*60,560),coin_idle,coin_taken));
+			self.itens.append(Coin((1555+i*60,250),coin_idle,coin_taken));
+			self.itens.append(Coin((2400+i*60,360),coin_idle,coin_taken));
 
-
-
-
+		for i in range(0,15):
+			self.itens.append(Coin((1960+i*60,130),coin_idle,coin_taken));
+			self.itens.append(Coin((1960+i*60,80),coin_idle,coin_taken));
+			self.itens.append(Coin((-1800+i*60,570),coin_idle,coin_taken));
+			self.itens.append(Coin((-1800+i*60,530),coin_idle,coin_taken));
 
 		walk_frames = [];
 		for current in range(0,20):
@@ -156,7 +171,6 @@ class Test_State:
 		#GAME PLAY STUFF
 		self.camera = [0,-600,1366,768];
 		self.world_end = [-4900,7000];
-
 		self.walking_areas = []; 
 
 		self.walking_areas.append(Ramp_45(3500,470,tiles,1,self.offset));
@@ -171,7 +185,8 @@ class Test_State:
 		self.walking_areas.append(Plain_Ground(1040,620,9600,600,tiles,self.offset));
 		self.walking_areas.append(Plain_Ground(1520,320,300,160,tiles,self.offset));
 		self.walking_areas.append(Plain_Ground(1950,180,900,160,tiles,self.offset));
-		self.walking_areas.append(Plain_Ground(-1900,620,1800,160,tiles,self.offset));
+		self.walking_areas.append(Plain_Ground(-1900,620,1650,300,tiles,self.offset));
+		self.walking_areas.append(Single_Tile(-250,620,1,tiles,self.offset));
 
 
 
@@ -184,17 +199,20 @@ class Test_State:
 		self.pressing_c = False;
 		self.curr_c = 0;
 
+
+
 		self.secret_combo = KeyCombo("UUDDLRLRBA");
 
 
 	def update(self,delta,key):
 		self.player.update(delta,key,self.camera,self.walking_areas);
-
+				
 		if(self.pressing_c and key[K_c] == False):
 			self.pressing_c = False;
 		if(key[K_c] and self.pressing_c == False):
 			self.pressing_c = True;
-			self.curr_c += 1;
+			self.curr_c += 1;	
+			self.player.curr_c = self.curr_c;
 			if(self.curr_c > 2):
 				self.curr_c = 0;
 			for i in range(0,5):
@@ -217,6 +235,8 @@ class Test_State:
 		for inimigo in self.inimigos:
 			inimigo.update(delta,self.camera,self.player);
 
+		for item in self.itens:
+			item.update(delta,self.player,self.camera);
 
 		#CAMERA UPDATE
 		if(self.player.get_rect()[0] < -500 and self.player.get_rect()[0] < self.camera[0]+500 and 
@@ -297,6 +317,9 @@ class Test_State:
 		for rect in self.walking_areas:
 			rect.draw(display,self.camera,self.offset);
 
+		for item in self.itens:
+			item.draw(display,self.camera,self.offset);
+
 		for inimigo in self.inimigos:
 			inimigo.draw(display,self.camera,self.offset);
 
@@ -311,5 +334,19 @@ class Test_State:
 		else:
 			pg.draw.rect(display,(0,255,255),(self.mouse_position[0],self.mouse_position[1],30*self.offset[0],30*self.offset[1]));
 
+		display.blit(self.fonte.render("Coins: "+str(self.player.cash),False,(0,0,0)),(0,0));
 		
+		if(self.curr_c == 0):
+			display.blit(self.sprites[2][1][8],(1060*self.offset[0],15*self.offset[1]));
+			display.blit(self.sprites[1][1][8],(1090*self.offset[0],15*self.offset[1]));
+			display.blit(self.sprites[0][1][8],(1150*self.offset[0],20*self.offset[1]));
+		if(self.curr_c == 1):
+			display.blit(self.sprites[0][1][8],(1050*self.offset[0],20*self.offset[1]));
+			display.blit(self.sprites[2][1][8],(1110*self.offset[0],15*self.offset[1]));
+			display.blit(self.sprites[1][1][8],(1140*self.offset[0],15*self.offset[1]));
+		if(self.curr_c == 2):
+			display.blit(self.sprites[1][1][8],(1060*self.offset[0],15*self.offset[1]));
+			display.blit(self.sprites[0][1][8],(1105*self.offset[0],20*self.offset[1]));
+			display.blit(self.sprites[2][1][8],(1160*self.offset[0],15*self.offset[1]));
+
 		#display.blit(self.pit_image,(820-self.camera[0],560-self.camera[1]));
