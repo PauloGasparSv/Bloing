@@ -7,6 +7,7 @@ from ground import *;
 from goodog import *;
 from smart_background import *;
 from itens import *;
+from bg_element import *;
 
 class Test_State: 
 	def __init__(self,display,resolution):
@@ -43,7 +44,7 @@ class Test_State:
 		animationATTACK = Animation(frames,900,True);
 		animationATTACK.set_once(True);
 
-		self.player = Player(animationIDLE,animationWALK,animationJUMP,animationDEATH,animationATTACK,[20,-200]);
+		self.player = Player(animationIDLE,animationWALK,animationJUMP,animationDEATH,animationATTACK,[20,50]);
 		
 		
 
@@ -156,7 +157,7 @@ class Test_State:
 		self.village_image = load_scaled_image("Assets/Cenario/vilarejo.png",self.offset);
 		self.village_position = (5200,-100);
 
-		self.flower_images = [pg.transform.scale(load_scaled_image("Assets/Cenario/arvore1.png",self.offset),(425,591)),
+		flower_images = [pg.transform.scale(load_scaled_image("Assets/Cenario/arvore1.png",self.offset),(425,591)),
 			pg.transform.scale(load_scaled_image("Assets/Cenario/arvore2.png",self.offset),(523,569)),
 			pg.transform.scale(load_scaled_image("Assets/Cenario/arvore3.png",self.offset),(539,636)),
 			pg.transform.scale(load_scaled_image("Assets/Cenario/arvore4.png",self.offset),(425,591)),
@@ -164,22 +165,28 @@ class Test_State:
 			pg.transform.scale(load_scaled_image("Assets/Cenario/arbusto2.png",self.offset),(222,155)),
 			pg.transform.scale(load_scaled_image("Assets/Cenario/arbusto3.png",self.offset),(247,119))];
 
-		self.flower_positions = ((420,32,0),(1100,52,1),(4000,32,0),(4100,-12,2),(3600,52,1),
-			(3900,32,3),(4200,50,1),(4420,32,0),(1700,520,4),(2200,475,5),(2600,475,5),(100,510,6),(3000,510,6),(2000,510,6),(2400,520,4));
+		self.bg_elements = [Bg_Element(420,32,flower_images[0]),Bg_Element(1100,52,flower_images[1]),
+		Bg_Element(4000,32,flower_images[0]),Bg_Element(4100,-12,flower_images[2]),
+		Bg_Element(3600,52,flower_images[1]),Bg_Element(3900,32,flower_images[3]),
+		Bg_Element(4200,50,flower_images[1]),Bg_Element(4420,32,flower_images[0]),
+		Bg_Element(1700,520,flower_images[4]),Bg_Element(2200,475,flower_images[5]),
+		Bg_Element(2600,475,flower_images[5]),Bg_Element(100,510,flower_images[6]),
+		Bg_Element(3000,510,flower_images[6]),Bg_Element(2000,510,flower_images[6]),
+		Bg_Element(2400,520,flower_images[4])];
 
 
 		#GAME PLAY STUFF
-		self.camera = [0,-600,1366,768];
+		self.camera = [0,0,1366,768];
 		self.world_end = [-4900,7000];
 		self.walking_areas = []; 
 
-		self.walking_areas.append(Ramp_45(3500,470,tiles,1,self.offset));
-		self.walking_areas.append(Ramp_45(3200,470,tiles,0,self.offset));
+		self.walking_areas.append(Ramp_45(5030,470,tiles,1,self.offset));
+		self.walking_areas.append(Ramp_45(4730,470,tiles,0,self.offset));
 		#self.walking_areas.append(Ramp_45(400,470,tiles,0,self.offset));
 		#self.walking_areas.append(Ramp_45(400,470,tiles,0,self.offset));
 
 
-		self.walking_areas.append(Single_Tile(3350,470,3,tiles,self.offset));
+		self.walking_areas.append(Single_Tile(4880,470,3,tiles,self.offset));
 
 		self.walking_areas.append(Plain_Ground(20,620,900,600,tiles,self.offset));
 		self.walking_areas.append(Plain_Ground(1040,620,9600,600,tiles,self.offset));
@@ -233,6 +240,9 @@ class Test_State:
 		for item in self.itens:
 			item.update(delta,self.player,self.camera);
 
+		for e in self.bg_elements:
+			e.update(delta,self.player,self.camera);
+
 		#CAMERA UPDATE
 		if(self.player.get_rect()[0] < -500 and self.player.get_rect()[0] < self.camera[0]+500 and 
 		 self.camera[0] > self.world_end[0]+10):
@@ -275,12 +285,11 @@ class Test_State:
 		for bg in self.background:
 			bg.update(delta,self.camera);
 
-
 		# OFF WORLD LIMITS PLAYER
-		if(self.player.get_rect()[1] >self.camera[1]+self.camera[3] + 300):
-			self.player.speed[1] = 0;	
-			self.player.change_animation(0);
-			self.player.position = [20,-200];
+		if(self.player.get_rect()[1] > self.camera[1]+self.camera[3] + 300):
+			self.player.speed[1] = 0;
+			if(self.player.current_action != 3):
+				self.player.change_animation(3)
 			if(self.player.position[0] - self.camera[0] > 2500):
 				self.camera[0] += self.player.position[0]-self.camera[0];
 			elif(self.player.position[0] - self.camera[0] < -2500):
@@ -306,8 +315,8 @@ class Test_State:
 			display.blit(self.village_image,((self.village_position[0]-self.camera[0])*self.offset[0],(self.village_position[1]-self.camera[1])*self.offset[1]));
 
 
-		for f in self.flower_positions:
-			display.blit(self.flower_images[f[2]],(f[0]-self.camera[0],f[1]-self.camera[1]));
+		for e in self.bg_elements:
+			e.draw(display,self.camera,self.offset);
 
 		for rect in self.walking_areas:
 			rect.draw(display,self.camera,self.offset);

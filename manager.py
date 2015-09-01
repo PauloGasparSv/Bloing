@@ -41,8 +41,6 @@ class Manager:
 			self.set_state(self.current_state_index+1);	
 
 
-
-
 	def draw(self):
 		self.current_state.draw(self.display);
 

@@ -4,7 +4,7 @@ from pygame.locals import *;
 class Player:
 	def __init__(self,idle_animation,walking_animation,jumping_animation,death_animation,attack_animation,pos):
 		self.current_action = 0;
-		self.initial_position = (pos[0],pos[1]);
+		self.initial_position = [pos[0],pos[1]];
 		self.position = pos;
 		self.facing_right = True;
 		self.animations = [idle_animation,walking_animation,jumping_animation,death_animation,attack_animation];
@@ -59,7 +59,7 @@ class Player:
 			self.facing_right = True;
 			if(self.speed[0] != 0.3):
 				self.speed[0] = 0.25;
-			if(self.current_action != 1 and self.grounded == True ):
+			if(self.current_action != 1 and self.grounded == True):
 				self.change_animation(1);
 
 
