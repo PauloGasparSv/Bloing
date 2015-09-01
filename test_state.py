@@ -8,7 +8,7 @@ from goodog import *;
 from smart_background import *;
 from itens import *;
 from bg_element import *;
-
+import sys;
 class Test_State: 
 	def __init__(self,display,resolution):
 		self.offset = (resolution[0]/1366.0,resolution[1]/768.0);
@@ -44,7 +44,7 @@ class Test_State:
 		animationATTACK = Animation(frames,900,True);
 		animationATTACK.set_once(True);
 
-		self.player = Player(animationIDLE,animationWALK,animationJUMP,animationDEATH,animationATTACK,[20,50]);
+		self.player = Player(animationIDLE,animationWALK,animationJUMP,animationDEATH,animationATTACK,[20,-200]);
 		
 		
 
@@ -286,7 +286,7 @@ class Test_State:
 			bg.update(delta,self.camera);
 
 		# OFF WORLD LIMITS PLAYER
-		if(self.player.get_rect()[1] > self.camera[1]+self.camera[3] + 300):
+		if(self.player.position[1] > self.camera[1]+self.camera[3] + 300):
 			self.player.speed[1] = 0;
 			if(self.player.current_action != 3):
 				self.player.change_animation(3)

@@ -116,18 +116,19 @@ class Player:
 			if(self.current_action == 4):
 				self.speed[0] = 0;
 		
+		if(self.speed[1] > 10):
+			self.speed[1] = 10;
+		if(self.speed[1] < -10):
+			self.speed[1] = -10;
 
-		self.position[1] += self.speed[1]*delta * 0.058;
+		self.position[1] += self.speed[1] * delta * 0.058;
 		if(self.speed[0] != 0 and self.facing_right and self.current_action != 3):
 			self.position[0] += delta * self.speed[0];
 		elif(self.speed[0] != 0 and self.facing_right == False and self.current_action != 3):
 			self.position[0] -= delta * self.speed[0];
 
 		self.animations[self.current_action].update(delta);
-		if(self.speed[1] > 10):
-			self.speed[1] = 10;
-		if(self.speed[1] < -10):
-			self.speed[1] = -10;
+		
 
 	def draw(self,display,camera,offset):
 		display.blit(self.animations[self.current_action].get_frame(not self.facing_right),((self.position[0]-camera[0])*offset[0],(self.position[1]-camera[1])*offset[1]));
