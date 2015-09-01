@@ -139,9 +139,6 @@ class Test_State:
 		self.inimigos.append(Goodog(walk_frames,death_frames,True,[2500,520],(3200,2400)));
 		self.inimigos.append(Goodog(walk_frames,death_frames,False,[2900,520],(3000,2300)));
 		
-		self.pit_image = load_scaled_image("Assets/Outros/alpha_black.png",(self.offset[0]*0.43,self.offset[1]*0.34));
-
-
 		tiles = [];
 		for i in range (0,41):
 			tiles.append(load_scaled_image("Assets/Tileset/"+str(i)+".png",self.offset));
